@@ -7,7 +7,7 @@
 
 #include "socket_handle.h"
 
-int loop_ftp(int listenfd)
+int loop_client(int listenfd)
 {
     int reader;
     int exit = 0;
@@ -19,7 +19,7 @@ int loop_ftp(int listenfd)
         memset(buffer, 0, sizeof(buffer));
         read_var = getline(&buffer, &size, stdin);
         if (read_var > 1) {
-            write(listenfd, buffer, read_var);
+            dprintf(listenfd, "%s", buffer);
             memset(buffer, 0, sizeof(buffer));
             reader = read(listenfd, buffer, 1024);
             if (reader > 1) {
@@ -50,5 +50,5 @@ int socket_handle(int port, char const *ip)
         printf("Error while connecting to server\n");
         return 84;
     }
-    return loop_ftp(listenfd);
+    return loop_client(listenfd);
 }
