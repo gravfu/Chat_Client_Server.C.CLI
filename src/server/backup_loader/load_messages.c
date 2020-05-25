@@ -23,14 +23,15 @@ void load_messages(chat_t **chat_list, const char *user_dir)
     const char *format = "ref: \"%s\"";
     FILE *chat_info = NULL;
 
-    strcpy(chat_info_path, user_dir);
-    strcpy(chat_info_path, "/chat_info");
+    if (!chat_list || !user_dir) return;
+    sprintf(chat_info_path, "%s%s", user_dir, "/chat_info");
     chat_info = fopen(chat_info_path, "r");
     if (chat_info) {
         while (fscanf(chat_info, format, chat_ref) == 1) {
             add_chat(chat_list, chat_ref);
             memset(chat_ref, 0, MAX_NAME_LENGTH);
         }
+        fclose(chat_info);
     }
 }
 static void add_chat(chat_t **chat_list, const char *chat_ref)

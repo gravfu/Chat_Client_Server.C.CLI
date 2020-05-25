@@ -29,9 +29,7 @@ void load_channels(team_t *team, const char *team_dir)
     FILE *channel_info = NULL;
 
     if (!team || !team_dir) return;
-    strcpy(c_info_path, team_dir);
-    strcat(c_info_path, "channels/channel_info");
-    printf("info dir: %s\n", c_info_path);
+    sprintf(c_info_path, "%s%s", team_dir, "channels/channel_info");
     parent_dir = team_dir;
     channel_info = fopen(c_info_path, "r");
     if (channel_info) {
@@ -41,6 +39,7 @@ void load_channels(team_t *team, const char *team_dir)
             memset(c_uuid, 0, 36);
             memset(c_desc, 0, MAX_DESCRIPTION_LENGTH);
         }
+        fclose(channel_info);
     }
 }
 

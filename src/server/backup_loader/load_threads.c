@@ -29,9 +29,7 @@ void load_threads(channel_t *channel, const char *channel_dir)
     FILE *thread_info = NULL;
 
     if (!channel || !channel_dir) return;
-    strcpy(t_info_path, channel_dir);
-    strcat(t_info_path, "threads/thread_info");
-    printf("thread info dir: %s\n", t_info_path);
+    sprintf(t_info_path, "%s%s", channel_dir, "threads/thread_info");
     parent_dir = channel_dir;
     thread_info = fopen(t_info_path, "r");
     if (thread_info) {
@@ -41,6 +39,7 @@ void load_threads(channel_t *channel, const char *channel_dir)
             memset(t_uuid, 0, 36);
             memset(t_init, 0, MAX_BODY_LENGTH);
         }
+        fclose(thread_info);
     }
 }
 

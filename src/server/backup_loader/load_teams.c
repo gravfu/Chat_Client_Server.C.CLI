@@ -33,6 +33,7 @@ void load_teams()
             memset(t_uuid, 0, 36);
             memset(t_desc, 0, MAX_DESCRIPTION_LENGTH);
         }
+        fclose(team_info);
     }
 }
 

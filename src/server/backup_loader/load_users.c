@@ -31,8 +31,8 @@ void load_users()
             memset(u_name, 0, MAX_NAME_LENGTH);
             memset(u_uuid, 0, 36);
         }
+        fclose(user_info);
     }
-    fclose(user_info);
 }
 
 void add_user(const char *u_name, const char *u_uuid)
