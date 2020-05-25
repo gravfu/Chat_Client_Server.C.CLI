@@ -90,7 +90,7 @@ void new_recv(int client_fd, command *cmd)
 static void add_new_arg(unsigned int *buff_loc, const char *buff, command *cmd)
 {
     cmd->num_args++;
-    cmd->args = reallocarray(cmd->args, cmd->num_args + 1, sizeof(char *));
+    cmd->args = realloc(cmd->args, (cmd->num_args + 1) * sizeof(char *));
     cmd->args[cmd->num_args - 1] = strdup(buff + *buff_loc);
     cmd->args[cmd->num_args] = NULL;
     *buff_loc = find_next(*buff_loc, buff);
@@ -110,7 +110,6 @@ static unsigned int is_start_cmd(int client_fd, command *cmd,
 {
     if (*buff_loc == 0 && (strcmp("START_COMM", buff) != 0)) {
         strcpy(cmd->cmd, "Invalid");
-        send_error(ERR_INVALIDCOMMAND, "Invalid command.", client_fd);
         return (0);
     } else if (*buff_loc == 0 && (strcmp("START_COMM", buff) == 0)) {
         *buff_loc = find_next(*buff_loc, buff);

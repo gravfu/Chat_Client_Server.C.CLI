@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
         printf("USAGE:\t./myteams_server port\n"
             "\tport is the port number on which the server socket listens.\n");
     } else if (argc == 2 && is_number(argv[1])) {
+        load_teams();
         load_users();
         launch_server(argv[1]);
     } else {

@@ -59,26 +59,19 @@ static void alloc_user(user_t **new_user, const char *u_name,
     }
     memset((*new_user)->user_name, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_user)->user_name, u_name);
-    if (uuid_parse(u_uuid, (*new_user)->user_uuid) == -1) {
-        free(*new_user);
-        *new_user = NULL;
-        printf("Error parsing uuid. Send error to lib\n");
-        return;
-    }
-    // load messages here
+    memset((*new_user)->user_uuid, 0, UUID_LENGTH + 1);
+    strcpy((*new_user)->user_uuid, u_uuid);
     (*new_user)->next = NULL;
 }
 
 user_t *find_user(const char *user_name, const char *user_uuid)
 {
-    char u_uuid_str[37] = {0};
     user_t *list_cpy = user_list;
 
     while (list_cpy != NULL) {
-        uuid_unparse(list_cpy->user_uuid, u_uuid_str);
         if (user_name && strcmp(user_name, list_cpy->user_name) == 0) {
             return (list_cpy);
-        } else if (user_uuid && strcmp(user_uuid, u_uuid_str) == 0) {
+        } else if (user_uuid && strcmp(user_uuid, list_cpy->user_uuid) == 0) {
             return (list_cpy);
         }
         list_cpy = list_cpy->next;

@@ -16,16 +16,14 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd);
 void users_cmd(int fd, command *cmd)
 {
     char rsp[256] = {0};
-    char u_uuid_str[37] = {0};
     connex_t *user_connex = find_connex(fd);
     const user_t *all_users = get_users();
 
     if (contains_errors(fd, user_connex, cmd))
         return;
     while (all_users) {
-        uuid_unparse(all_users->user_uuid, u_uuid_str);
         sprintf(rsp, "username: \"%s\" user_uuid: \"%s\"\r\n",
-            all_users->user_name, u_uuid_str);
+            all_users->user_name, all_users->user_uuid);
         send_all(fd, rsp, strlen(rsp));
         all_users = all_users->next;
     }

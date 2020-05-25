@@ -5,11 +5,19 @@
 ## Makefile for my_teams server
 ##
 
-SRC	=		./backup_loader/load_users.c			\
+SRC	=		./backup_loader/load_channels.c			\
 			./backup_loader/load_messages.c			\
+			./backup_loader/load_teams.c			\
+			./backup_loader/load_threads.c			\
+			./backup_loader/load_users.c			\
+			./commands/create_cmd.c					\
+			./commands/create_resource.c			\
 			./commands/help_cmd.c					\
 			./commands/login_cmd.c					\
 			./commands/logout_cmd.c					\
+			./commands/make_path.c					\
+			./commands/switch_context.c				\
+			./commands/use_cmd.c					\
 			./commands/user_cmd.c					\
 			./commands/users_cmd.c					\
 			./connex_mgmt/accept_conn.c				\

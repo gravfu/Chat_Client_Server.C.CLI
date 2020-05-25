@@ -39,8 +39,8 @@ static void alloc_connex(connex_t **list, int fd)
     }
     (*list)->sock_fd = fd;
     (*list)->logged_in = 0;
+    (*list)->context = NULL;
     (*list)->user = NULL;
-    memset((*list)->context, 0, 4096);
     (*list)->team_cxt = 0;
     (*list)->channel_cxt = 0;
     (*list)->thread_cxt = 0;
@@ -55,8 +55,8 @@ static int found_space(int fd)
         if (list_cpy->sock_fd == -1) {
             list_cpy->sock_fd = fd;
             list_cpy->logged_in = 0;
+            list_cpy->context = NULL;
             list_cpy->user = NULL;
-            memset(list_cpy->context, 0, 4096);
             list_cpy->team_cxt = 0;
             list_cpy->channel_cxt = 0;
             list_cpy->thread_cxt = 0;
@@ -75,8 +75,8 @@ void delete_conn(int fd)
         if (list_cpy->sock_fd == fd) {
             list_cpy->sock_fd = -1;
             list_cpy->logged_in = 0;
+            list_cpy->context = NULL;
             list_cpy->user = NULL;
-            memset(list_cpy->context, 0, 4096);
             list_cpy->team_cxt = 0;
             list_cpy->channel_cxt = 0;
             list_cpy->thread_cxt = 0;
