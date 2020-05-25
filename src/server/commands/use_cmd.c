@@ -26,20 +26,19 @@ void use_cmd(int fd, command *cmd)
     if (contains_errors(fd, user_connex, cmd))
         return;
     change_context(user_connex, cmd);
-    sprintf(rsp, "START_RSP\r\n%d: %s\r\nEND_COMM\r\n", RSP_USE,
+    sprintf(rsp, "START_RSP\r\n%d: %s\r\nEND_RSP\r\n", RSP_USE,
         "Successful context change.");
     send_all(fd, rsp, strlen(rsp));
-
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 {
     if (!user_connex->logged_in) {
-        send_error(ERR_NOTCONNECTED, "Not logged in.\n", fd);
+        send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
         return (1);
     }
     if (cmd->num_args > 3) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.\n", fd);
+        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
         return (1);
     }
     return (check_context(fd, cmd));
@@ -53,14 +52,14 @@ static int check_context(int fd, command *cmd)
     if (cmd->num_args > 0) {
         team = find_team(NULL, cmd->args[0]);
         if (!team) {
-            send_error(ERR_NOSUCHTEAM, "No such team exists.\n", fd);
+            send_error(ERR_NOSUCHTEAM, "No such team exists.", fd);
             return (1);
         }
     }
     if (cmd->num_args > 1) {
         channel = find_channel(team->channels, NULL, cmd->args[1]);
         if (!channel) {
-            send_error(ERR_NOSUCHCHANNEL, "No such channel exists.\n", fd);
+            send_error(ERR_NOSUCHCHANNEL, "No such channel exists.", fd);
             return (1);
         }
     }
@@ -74,7 +73,7 @@ static int check_context_helper(int fd, command *cmd, channel_t *channel)
     if (cmd->num_args > 2) {
         thread = find_thread(channel->threads, NULL, cmd->args[2]);
         if (!thread) {
-            send_error(ERR_NOSUCHTHREAD, "No such thread exists.\n", fd);
+            send_error(ERR_NOSUCHTHREAD, "No such thread exists.", fd);
             return (1);
         }
     }

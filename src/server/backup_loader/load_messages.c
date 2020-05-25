@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 static void add_chat(chat_t **chat_list, const char *chat_ref);
 

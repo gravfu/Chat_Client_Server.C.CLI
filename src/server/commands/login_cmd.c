@@ -44,15 +44,15 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 {
     if (user_connex->logged_in &&
         strcmp(user_connex->user->user_name, cmd->args[0]) == 0) {
-        send_error(ERR_ALREADYCONNECTED, "Already logged in.\n", fd);
+        send_error(ERR_ALREADYCONNECTED, "Already logged in.", fd);
         return (1);
     }
     if (cmd->num_args == 0) {
-        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.\n", fd);
+        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.", fd);
         return (1);
     }
     if (cmd->num_args > 1) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.\n", fd);
+        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
         return (1);
     }
     return (0);

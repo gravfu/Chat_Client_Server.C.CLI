@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 static void alloc_user(user_t **new_user, const char *u_name,
     const char *u_uuid);

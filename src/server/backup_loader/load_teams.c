@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
 
@@ -68,6 +67,8 @@ static void alloc_team(team_t **new_team, const char *t_name,
     memset((*new_team)->team_desc, 0, MAX_DESCRIPTION_LENGTH + 1);
     strcpy((*new_team)->team_desc, t_desc);
     sprintf(team_dir, "./backup/teams/team_%s/", t_uuid);
+    (*new_team)->subs = NULL;
+    load_subs(*new_team, team_dir);
     (*new_team)->channels = NULL;
     load_channels(*new_team, team_dir);
     (*new_team)->next = NULL;

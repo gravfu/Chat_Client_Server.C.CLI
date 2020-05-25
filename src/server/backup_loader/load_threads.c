@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 void add_thread(channel_t *p_channel, const char *t_title,
     const char *t_uuid, const char *t_init);

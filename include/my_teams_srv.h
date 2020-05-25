@@ -52,6 +52,7 @@ typedef struct team {
     char team_name[MAX_NAME_LENGTH + 1];
     char team_uuid[UUID_LENGTH + 1];
     char team_desc[MAX_DESCRIPTION_LENGTH + 1];
+    struct user *subs;
     struct channel *channels;
     struct team *next;
 } team_t;
@@ -122,6 +123,8 @@ void add_chann(team_t *p_team, const char *c_name, const char *c_uuid,
 
 void add_connex(int fd);
 
+void add_sub(team_t *p_team, const char *s_name, const char *s_uuid);
+
 void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
 
 void add_thread(channel_t *p_channel, const char *t_title,
@@ -159,6 +162,8 @@ thread_t *find_thread(thread_t *thread_list, const char *thread_title,
 
 user_t *find_user(const char *user_name, const char *user_uuid);
 
+user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid);
+
 int get_sock(char *port);
 
 const user_t *get_users();
@@ -170,6 +175,8 @@ void launch_server(char *port);
 void listen_for_conn(int listen_fd);
 
 void load_channels(team_t *team, const char *team_dir);
+
+void load_subs(team_t *team, const char *team_dir);
 
 void load_teams();
 
@@ -195,6 +202,8 @@ void send_all(int client_fd, const char *buffer, int len);
 
 void send_error(int error_num, const char *msg, int client_fd);
 
+void subscribe_cmd(int fd, command *cmd);
+
 void team_switch(connex_t *user_connex, command *cmd);
 
 void thread_switch(connex_t *user_connex, command *cmd);
@@ -213,7 +222,7 @@ static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
     &user_cmd,
     NULL,
     NULL,
-    NULL,
+    &subscribe_cmd,
     NULL,
     NULL,
     &use_cmd,

@@ -9,7 +9,6 @@
 #include "return_codes.h"
 #include <stdio.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd);
 
@@ -32,20 +31,20 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     const user_t *found_user = NULL;
 
     if (!user_connex->user || !user_connex->logged_in) {
-        send_error(ERR_NOTCONNECTED, "Not logged in.\n", fd);
+        send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
         return (1);
     }
     if (cmd->num_args == 0) {
-        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.\n", fd);
+        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.", fd);
         return (1);
     }
     if (cmd->num_args > 1) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.\n", fd);
+        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
         return (1);
     }
     found_user = find_user(NULL, cmd->args[0]);
     if (!found_user) {
-        send_error(ERR_USERUUID, "Invalid uuid.\n", fd);
+        send_error(ERR_USERUUID, "Invalid uuid.", fd);
         return (1);
     }
     return (0);

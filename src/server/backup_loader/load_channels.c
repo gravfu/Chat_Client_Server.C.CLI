@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <uuid/uuid.h>
 
 void add_chann(team_t *p_team, const char *c_name, const char *c_uuid,
     const char *c_desc);

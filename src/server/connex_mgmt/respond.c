@@ -18,5 +18,5 @@ void respond(int fd, command *cmd)
             return;
         }
     }
-    send_error(ERR_INVALIDCOMMAND, "Unknown comamnd.\r\n", fd);
+    send_error(ERR_INVALIDCOMMAND, "Unknown comamnd.", fd);
 }
