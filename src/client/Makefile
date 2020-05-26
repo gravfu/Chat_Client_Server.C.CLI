@@ -16,7 +16,12 @@ OBJ     	=       $(SRC:.c=.o)
 
 NAME    	=       myteams_cli
 
+INCLUDE		=		../../libs/myteams
+
 all:		$(NAME) $(NAME_QT)
+
+%.o: %.c
+			$(CC) -g -c $< $(CFLAGS) $(INCLUDE) -o $@
 
 $(NAME):	$(OBJ)
 		$(CC) $(FLAGS) -o $(NAME) $(OBJ)

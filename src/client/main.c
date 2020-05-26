@@ -10,8 +10,9 @@
 
 int usage(void)
 {
-    printf("USAGE: ./myteams_server port\n\n");
-    printf("\tport is the port number on which the server socket listens.\n");
+    printf("USAGE:  ./myteams_cli ip port\n\n");
+    printf("\tip\tis the server ip address on which the server socket listens\n");
+    printf("\tport\tis the port number on which the server socket listens\n");
 }
 
 int main(int argc, char **argv)
