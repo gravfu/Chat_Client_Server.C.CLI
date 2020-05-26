@@ -99,7 +99,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 
 static void create(int fd, connex_t *user_connex, command *cmd)
 {
-    char uuid_str[37];
+    char uuid_str[UUID_STR_LEN] = {0};
     uuid_t uuid;
     channel_t *channel_context = NULL;
     thread_t *thread_context = NULL;

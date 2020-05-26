@@ -20,7 +20,7 @@ static void create_user_dir(const char *u_name, const char *u_uuid_str);
 void login_cmd(int fd, command *cmd)
 {
     char rsp[256] = {0};
-    char u_uuid_str[37];
+    char u_uuid_str[UUID_STR_LEN] = {0};
     connex_t *user_connex = find_connex(fd);
     uuid_t u_uuid;
     user_t *user = NULL;

@@ -14,12 +14,10 @@
 static void alloc_user(user_t **new_user, const char *u_name,
     const char *u_uuid);
 
-void add_user(const char *u_name, const char *u_uuid);
-
 void load_users()
 {
     char u_name[MAX_NAME_LENGTH + 1] = {0};
-    char u_uuid[37] = {0};
+    char u_uuid[UUID_STR_LEN] = {0};
     const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\"\n";
     FILE *user_info = NULL;
 
@@ -52,6 +50,8 @@ void add_user(const char *u_name, const char *u_uuid)
 static void alloc_user(user_t **new_user, const char *u_name,
     const char *u_uuid)
 {
+    char user_dir[4096] = {0};
+
     if ((*new_user = malloc(sizeof(user_t))) == NULL) {
         printf("Error allocation. Send error to lib\n");
         return;
@@ -60,6 +60,10 @@ static void alloc_user(user_t **new_user, const char *u_name,
     strcpy((*new_user)->user_name, u_name);
     memset((*new_user)->user_uuid, 0, UUID_STR_LEN);
     strcpy((*new_user)->user_uuid, u_uuid);
+    sprintf(user_dir, "./backup/users/usr_%s/", u_uuid);
+    (*new_user)->team_subs = NULL;
+    load_team_subs(*new_user, user_dir);
+    // load chats ...
     (*new_user)->next = NULL;
 }
 

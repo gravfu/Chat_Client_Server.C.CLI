@@ -11,15 +11,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
-
 static void alloc_team(team_t **new_team, const char *t_name,
     const char *t_uuid, const char *t_desc);
 
 void load_teams()
 {
     char t_name[MAX_NAME_LENGTH + 1] = {0};
-    char t_uuid[37] = {0};
+    char t_uuid[UUID_STR_LEN] = {0};
     char t_desc[MAX_DESCRIPTION_LENGTH + 1] = {0};
     const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" desc: \"%[^\"]\"\n";
     FILE *team_info = NULL;

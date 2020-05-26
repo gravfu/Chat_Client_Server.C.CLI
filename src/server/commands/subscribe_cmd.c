@@ -17,6 +17,9 @@ static int err_check_helper(int fd, connex_t *user_connex, command *cmd);
 
 static void subscribe(connex_t *user_connex, team_t *team);
 
+static void subscribe_helper(const char *sub_info_path,
+    const char *team_sub_info_path, connex_t *user_connex, team_t *team);
+
 void subscribe_cmd(int fd, command *cmd)
 {
     char rsp[256] = {0};
@@ -34,8 +37,6 @@ void subscribe_cmd(int fd, command *cmd)
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 {
-    team_t *team = NULL;
-
     if (!user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
         return (1);
@@ -70,17 +71,33 @@ static int err_check_helper(int fd, connex_t *user_connex, command *cmd)
 
 static void subscribe(connex_t *user_connex, team_t *team)
 {
-    char sub_info_path[4096];
-    const char *format = "./backup/teams/team_%s/sub_info";
-    const char *sub_format = "name: \"%s\" uuid: \"%s\"\n";
-    FILE *sub_info = NULL;
+    char sub_info_path[4096] = {0};
+    char team_sub_info_path[4096] = {0};
+    const char *team_p_format = "./backup/teams/team_%s/sub_info";
+    const char *user_p_format = "./backup/users/usr_%s/team_sub_info";
 
     add_sub(team, user_connex->user->user_name, user_connex->user->user_uuid);
-    sprintf(sub_info_path, format, team->team_uuid);
+    sprintf(sub_info_path, team_p_format, team->team_uuid);
+    sprintf(team_sub_info_path, user_p_format, user_connex->user->user_uuid);
+    subscribe_helper(sub_info_path, team_sub_info_path, user_connex, team);
+}
+
+static void subscribe_helper(const char *sub_info_path,
+    const char *team_sub_info_path, connex_t *user_connex, team_t *team)
+{
+    const char *sub_format = "name: \"%s\" uuid: \"%s\"\n";
+    const char *team_sub_format = "name: \"%s\" uuid: \"%s\" desc: \"%s\"\n";
+    FILE *sub_info = NULL;
+    FILE *team_sub_info = NULL;
+
     sub_info = fopen(sub_info_path, "a+");
-    if (sub_info) {
+    team_sub_info = fopen(team_sub_info_path, "a+");
+    if (sub_info && team_sub_info) {
         fprintf(sub_info, sub_format, user_connex->user->user_name,
             user_connex->user->user_uuid);
+        fprintf(team_sub_info, team_sub_format, team->team_name,
+            team->team_uuid, team->team_desc);
         fclose(sub_info);
+        fclose(team_sub_info);
     }
 }

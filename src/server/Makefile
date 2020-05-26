@@ -5,9 +5,11 @@
 ## Makefile for my_teams server
 ##
 
-SRC	=		./backup_loader/load_channels.c			\
-			./backup_loader/load_messages.c			\
+SRC	=		./backup_loader/drop_sub.c				\
+			./backup_loader/load_channels.c			\
+			./backup_loader/load_chats.c			\
 			./backup_loader/load_subs.c				\
+			./backup_loader/load_team_subs.c		\
 			./backup_loader/load_teams.c			\
 			./backup_loader/load_threads.c			\
 			./backup_loader/load_users.c			\
@@ -18,6 +20,7 @@ SRC	=		./backup_loader/load_channels.c			\
 			./commands/logout_cmd.c					\
 			./commands/make_path.c					\
 			./commands/subscribe_cmd.c				\
+			./commands/subscribed_cmd.c				\
 			./commands/switch_context.c				\
 			./commands/unsubscribe_cmd.c			\
 			./commands/use_cmd.c					\

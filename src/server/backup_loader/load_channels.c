@@ -12,9 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_chann(team_t *p_team, const char *c_name, const char *c_uuid,
-    const char *c_desc);
-
 static void alloc_chann(channel_t **new_channel, const char *c_name,
     const char *c_uuid, const char *c_desc);
 
@@ -22,7 +19,7 @@ void load_channels(team_t *team, const char *team_dir)
 {
     char c_info_path[4096] = {0};
     char c_name[MAX_NAME_LENGTH + 1] = {0};
-    char c_uuid[37] = {0};
+    char c_uuid[UUID_STR_LEN] = {0};
     char c_desc[MAX_DESCRIPTION_LENGTH + 1] = {0};
     const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" desc: \"%[^\"]\"\n";
     FILE *channel_info = NULL;

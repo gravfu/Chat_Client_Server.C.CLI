@@ -64,6 +64,7 @@ typedef struct chat {
 typedef struct user {
     char user_name[MAX_NAME_LENGTH + 1];
     char user_uuid[UUID_STR_LEN];
+    struct team *team_subs;
     struct chat *chats;
     struct user *next;
 } user_t;
@@ -126,6 +127,9 @@ void add_sub(team_t *p_team, const char *s_name, const char *s_uuid);
 
 void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
 
+void add_team_sub(user_t *p_user, const char *t_name, const char *t_uuid,
+    const char *t_desc);
+
 void add_thread(channel_t *p_channel, const char *t_title,
     const char *t_uuid, const char *t_init);
 
@@ -150,6 +154,12 @@ void create_thread_file(channel_t *channel, const char *t_title,
 void delete_conn(int fd);
 
 void del_sub(user_t **sub_list, const char *sub_name, const char *sub_uuid);
+
+void del_team_sub(team_t **sub_list, const char *t_name, const char *t_uuid);
+
+int drop_sub(team_t *team, const char *sub_name, const char *sub_uuid);
+
+int drop_team_sub(user_t *user, const char *t_name, const char *t_uuid);
 
 channel_t *find_channel(channel_t *channel_list, const char *channel_name,
     const char *channel_uuid);
@@ -181,6 +191,8 @@ void load_subs(team_t *team, const char *team_dir);
 
 void load_teams();
 
+void load_team_subs(user_t *user, const char *user_dir);
+
 void load_threads(channel_t *channel, const char *channel_dir);
 
 void load_users();
@@ -205,6 +217,8 @@ void send_error(int error_num, const char *msg, int client_fd);
 
 void subscribe_cmd(int fd, command *cmd);
 
+void subscribed_cmd(int fd, command *cmd);
+
 void team_switch(connex_t *user_connex, command *cmd);
 
 void thread_switch(connex_t *user_connex, command *cmd);
@@ -226,7 +240,7 @@ static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
     NULL,
     NULL,
     &subscribe_cmd,
-    NULL,
+    &subscribed_cmd,
     &unsubscribe_cmd,
     &use_cmd,
     &create_cmd,

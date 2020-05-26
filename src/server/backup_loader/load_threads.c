@@ -12,9 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_thread(channel_t *p_channel, const char *t_title,
-    const char *t_uuid, const char *t_init);
-
 static void alloc_thread(thread_t **new_thread, const char *t_title,
     const char *t_uuid, const char *t_init);
 
@@ -22,7 +19,7 @@ void load_threads(channel_t *channel, const char *channel_dir)
 {
     char t_info_path[4096] = {0};
     char t_title[MAX_NAME_LENGTH + 1] = {0};
-    char t_uuid[37] = {0};
+    char t_uuid[UUID_STR_LEN] = {0};
     char t_init[MAX_BODY_LENGTH + 1] = {0};
     const char *format = "title: \"%[^\"]\" uuid: \"%[^\"]\" init: \"%[^\"]\"";
     FILE *thread_info = NULL;

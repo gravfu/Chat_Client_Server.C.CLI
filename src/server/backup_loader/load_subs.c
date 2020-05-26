@@ -11,8 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_sub(team_t *p_team, const char *s_name, const char *s_uuid);
-
 static void alloc_sub(user_t **new_sub, const char *s_name,
     const char *s_uuid);
 
@@ -20,7 +18,7 @@ void load_subs(team_t *team, const char *team_dir)
 {
     char sub_info_path[4096] = {0};
     char s_name[MAX_NAME_LENGTH + 1] = {0};
-    char s_uuid[37] = {0};
+    char s_uuid[UUID_STR_LEN] = {0};
     const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\"\n";
     FILE *sub_info = NULL;
 

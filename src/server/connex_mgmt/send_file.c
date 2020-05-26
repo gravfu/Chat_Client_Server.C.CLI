@@ -12,7 +12,7 @@ static int send_part(int client_fd, const char *buffer, int len);
 
 void send_file(int src_fd, int dest_fd, size_t size, connex_t *user_connex)
 {
-    char buff[4096];
+    char buff[4096] = {0};
     ssize_t num_read = 0;
     ssize_t num_sent = 0;
     size_t total = 0;

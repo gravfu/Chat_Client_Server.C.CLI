@@ -26,7 +26,8 @@
 #define RSP_LOGIN 500
 #define RSP_LOGOUT 501
 #define RSP_SUBSCRIBE 502
-#define RSP_UNSUBSCRIBE 503
-#define RSP_USE 504
+#define RSP_SUBSCRIBED 503
+#define RSP_UNSUBSCRIBE 504
+#define RSP_USE 505
 
 #endif /* !RETURN_CODES_H_ */
