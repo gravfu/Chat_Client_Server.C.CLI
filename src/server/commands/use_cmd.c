@@ -26,8 +26,8 @@ void use_cmd(int fd, command *cmd)
     if (contains_errors(fd, user_connex, cmd))
         return;
     change_context(user_connex, cmd);
-    sprintf(rsp, "START_RSP\r\n%d: %s\r\nEND_RSP\r\n", RSP_USE,
-        "Successful context change.");
+    sprintf(rsp, "START_RSP\r\n%d: Successful context change.\r\nEND_RSP\r\n",
+        RSP_USE);
     send_all(fd, rsp, strlen(rsp));
 }
 

@@ -8,6 +8,8 @@
 #include "my_teams_srv.h"
 #include "return_codes.h"
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
 #include <uuid/uuid.h>
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd);
@@ -25,6 +27,9 @@ void create_cmd(int fd, command *cmd)
     if (contains_errors(fd, user_connex, cmd))
         return;
     create(fd, user_connex, cmd);
+    sprintf(rsp, "START_RSP\r\n%d: Resource created successfully.\r\n"
+        "END_RSP\r\n", RSP_USE);
+    send_all(fd, rsp, strlen(rsp));
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd)

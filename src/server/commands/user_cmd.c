@@ -21,8 +21,9 @@ void user_cmd(int fd, command *cmd)
     if (contains_errors(fd, user_connex, cmd))
         return;
     found_user = find_user(NULL, cmd->args[0]);
-    sprintf(rsp, "username: \"%s\" user_uuid: \"%s\"\r\n",
-        found_user->user_name, cmd->args[0]);
+    sprintf(rsp, "START_RSP\r\n%d: User information:\r\n\t"
+        "user name: \"%s\" user uuid: \"%s\"\r\nEND_RSP\r\n",
+        RSP_USER, found_user->user_name, found_user->user_uuid);
     send_all(fd, rsp, strlen(rsp));
 }
 

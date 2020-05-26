@@ -36,7 +36,8 @@ void login_cmd(int fd, command *cmd)
     }
     user_connex->logged_in = 1;
     user_connex->user = user;
-    sprintf(rsp, "%d: %s", RSP_LOGIN, "Login successful\n");
+    sprintf(rsp, "START_RSP\r\n%d: Login successful.\r\nEND_RSP\r\n",
+        RSP_LOGIN);
     send_all(fd, rsp, strlen(rsp));
 }
 

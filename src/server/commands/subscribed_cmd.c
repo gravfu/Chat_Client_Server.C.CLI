@@ -72,7 +72,7 @@ char *get_sub_teams(connex_t *user_connex)
     unsigned int length = 0;
 
     for (int i = 0; team_subs != NULL; i++) {
-        sprintf(buff, "team name: \"%s\" team uuid: \"%s\"\r\n",
+        sprintf(buff, "\tteam name: \"%s\" team uuid: \"%s\"\r\n",
             team_subs->team_name, team_subs->team_uuid);
         length += strlen(buff);
         all_sub_teams = realloc(all_sub_teams, length * sizeof(char));

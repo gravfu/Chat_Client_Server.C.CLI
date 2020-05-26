@@ -20,7 +20,8 @@ void logout_cmd(int fd, command *cmd)
 
     if (contains_errors(fd, user_connex, cmd))
         return;
-    sprintf(rsp, "%d: %s", RSP_LOGOUT, "Logout successful\n");
+    sprintf(rsp, "START_RSP\r\n%d: Logout successful.\r\nEND_RSP\r\n",
+        RSP_LOGOUT);
     send_all(fd, rsp, strlen(rsp));
     delete_conn(fd);
     close(fd);

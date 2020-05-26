@@ -30,8 +30,8 @@ void subscribe_cmd(int fd, command *cmd)
         return;
     team = find_team(NULL, cmd->args[0]);
     subscribe(user_connex, team);
-    sprintf(rsp, "START_RSP\r\n%d: %s %s.\r\nEND_RSP\r\n", RSP_SUBSCRIBE,
-        "Successfully subscribed to", team->team_name);
+    sprintf(rsp, "START_RSP\r\n%d: Successfully subscribed to %s.\r\n"
+        "END_RSP\r\n", RSP_SUBSCRIBE, team->team_name);
     send_all(fd, rsp, strlen(rsp));
 }
 
