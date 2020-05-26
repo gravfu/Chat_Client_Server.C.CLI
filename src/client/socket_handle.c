@@ -7,23 +7,40 @@
 
 #include "socket_handle.h"
 
+int user_parser(char *buffer)
+{
+    int read_var;
+    memset(buffer, 0, 2048);
+    write(0, "\n?>", 3);
+    read_var = read(0, buffer, 2047);
+    for (int i = 0; i < read_var; i++) {
+        if (buffer[i] == ' ')
+            buffer[i] = '\n';
+    }
+    return read_var;
+}
+
 int loop_client(int listenfd)
 {
     int reader;
     int exit = 0;
-    int read_var = 1024;
-    char *buffer = NULL;
+    char buffer[2048];
     size_t size = 1024;
+    int read_var = 2048;
 
-    while (exit == 0 && read_var > 0) {
-        memset(buffer, 0, sizeof(buffer));
-        read_var = getline(&buffer, &size, stdin);
+    reader = read(listenfd, buffer, 1024);
+    printf("%s", buffer);
+    while (read_var > 0) { 
+        read_var = user_parser(buffer);
+        printf("BUFFER: %s\n", buffer);
         if (read_var > 1) {
-            dprintf(listenfd, "%s", buffer);
+            dprintf(listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
             memset(buffer, 0, sizeof(buffer));
-            reader = read(listenfd, buffer, 1024);
-            if (reader > 1) {
-                printf("BUFFER: %s\n", buffer);
+            while (strstr(buffer, "END_CMD") == NULL && strstr(buffer, "END_RSP") == NULL && strstr(buffer, "500") == NULL) {
+                reader = read(listenfd, buffer, 2047);
+                if (reader > 1) {
+                    printf("BUFFER: %s", buffer);
+                }
             }
         }
     }
