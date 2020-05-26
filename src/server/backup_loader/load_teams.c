@@ -29,7 +29,7 @@ void load_teams()
         while (fscanf(team_info, format, t_name, t_uuid, t_desc) == 3) {
             add_team(t_name, t_uuid, t_desc);
             memset(t_name, 0, MAX_NAME_LENGTH);
-            memset(t_uuid, 0, 36);
+            memset(t_uuid, 0, UUID_STR_LEN);
             memset(t_desc, 0, MAX_DESCRIPTION_LENGTH);
         }
         fclose(team_info);
@@ -62,7 +62,7 @@ static void alloc_team(team_t **new_team, const char *t_name,
     }
     memset((*new_team)->team_name, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_team)->team_name, t_name);
-    memset((*new_team)->team_uuid, 0, UUID_LENGTH + 1);
+    memset((*new_team)->team_uuid, 0, UUID_STR_LEN);
     strcpy((*new_team)->team_uuid, t_uuid);
     memset((*new_team)->team_desc, 0, MAX_DESCRIPTION_LENGTH + 1);
     strcpy((*new_team)->team_desc, t_desc);

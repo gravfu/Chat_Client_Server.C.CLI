@@ -35,7 +35,7 @@ void load_channels(team_t *team, const char *team_dir)
         while (fscanf(channel_info, format, c_name, c_uuid, c_desc) == 3) {
             add_chann(team, c_name, c_uuid, c_desc);
             memset(c_name, 0, MAX_NAME_LENGTH);
-            memset(c_uuid, 0, 36);
+            memset(c_uuid, 0, UUID_STR_LEN);
             memset(c_desc, 0, MAX_DESCRIPTION_LENGTH);
         }
         fclose(channel_info);
@@ -71,7 +71,7 @@ static void alloc_chann(channel_t **new_channel, const char *c_name,
     }
     memset((*new_channel)->channel_name, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_channel)->channel_name, c_name);
-    memset((*new_channel)->channel_uuid, 0, UUID_LENGTH + 1);
+    memset((*new_channel)->channel_uuid, 0, UUID_STR_LEN);
     strcpy((*new_channel)->channel_uuid, c_uuid);
     memset((*new_channel)->channel_desc, 0, MAX_DESCRIPTION_LENGTH + 1);
     strcpy((*new_channel)->channel_desc, c_desc);

@@ -31,7 +31,7 @@ void load_subs(team_t *team, const char *team_dir)
         while (fscanf(sub_info, format, s_name, s_uuid) == 2) {
             add_sub(team, s_name, s_uuid);
             memset(s_name, 0, MAX_NAME_LENGTH);
-            memset(s_uuid, 0, 36);
+            memset(s_uuid, 0, UUID_STR_LEN);
         }
         fclose(sub_info);
     }
@@ -61,7 +61,7 @@ static void alloc_sub(user_t **new_sub, const char *s_name,
     }
     memset((*new_sub)->user_name, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_sub)->user_name, s_name);
-    memset((*new_sub)->user_uuid, 0, UUID_LENGTH + 1);
+    memset((*new_sub)->user_uuid, 0, UUID_STR_LEN);
     strcpy((*new_sub)->user_uuid, s_uuid);
     (*new_sub)->next = NULL;
 }
@@ -77,4 +77,25 @@ user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid)
         sub_list = sub_list->next;
     }
     return (NULL);
+}
+
+void del_sub(user_t **sub_list, const char *sub_name, const char *sub_uuid)
+{
+    user_t *prev = NULL;
+    user_t *temp = *sub_list;
+
+    if (temp != NULL && strcmp(temp->user_name, sub_name) == 0 &&
+        strcmp(temp->user_uuid, sub_uuid) == 0) {
+        *sub_list = temp->next;
+        free(temp);
+        return;
+    }
+    while (temp != NULL && strcmp(temp->user_name, sub_name) != 0 &&
+        strcmp(temp->user_uuid, sub_uuid) != 0) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp == NULL) return;
+    prev->next = temp->next;
+    free(temp);
 }

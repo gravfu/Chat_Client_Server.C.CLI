@@ -23,7 +23,6 @@
 #define MAX_DESCRIPTION_LENGTH 255
 #define MAX_BODY_LENGTH 512
 #define MAX_PENDING 10
-#define UUID_LENGTH 36
 
 typedef struct {
     char cmd[MAX_COMMAND_LENGTH + 1];
@@ -33,7 +32,7 @@ typedef struct {
 
 typedef struct thread {
     char thread_title[MAX_NAME_LENGTH + 1];
-    char thread_uuid[UUID_LENGTH + 1];
+    char thread_uuid[UUID_STR_LEN];
     char thread_init[MAX_BODY_LENGTH + 1];
     struct channel *p_channel;
     struct thread *next;
@@ -41,7 +40,7 @@ typedef struct thread {
 
 typedef struct channel {
     char channel_name[MAX_NAME_LENGTH + 1];
-    char channel_uuid[UUID_LENGTH + 1];
+    char channel_uuid[UUID_STR_LEN];
     char channel_desc[MAX_DESCRIPTION_LENGTH + 1];
     struct team *p_team;
     struct thread *threads;
@@ -50,7 +49,7 @@ typedef struct channel {
 
 typedef struct team {
     char team_name[MAX_NAME_LENGTH + 1];
-    char team_uuid[UUID_LENGTH + 1];
+    char team_uuid[UUID_STR_LEN];
     char team_desc[MAX_DESCRIPTION_LENGTH + 1];
     struct user *subs;
     struct channel *channels;
@@ -64,7 +63,7 @@ typedef struct chat {
 
 typedef struct user {
     char user_name[MAX_NAME_LENGTH + 1];
-    char user_uuid[UUID_LENGTH + 1];
+    char user_uuid[UUID_STR_LEN];
     struct chat *chats;
     struct user *next;
 } user_t;
@@ -150,6 +149,8 @@ void create_thread_file(channel_t *channel, const char *t_title,
 
 void delete_conn(int fd);
 
+void del_sub(user_t **sub_list, const char *sub_name, const char *sub_uuid);
+
 channel_t *find_channel(channel_t *channel_list, const char *channel_name,
     const char *channel_uuid);
 
@@ -208,6 +209,8 @@ void team_switch(connex_t *user_connex, command *cmd);
 
 void thread_switch(connex_t *user_connex, command *cmd);
 
+void unsubscribe_cmd(int fd, command *cmd);
+
 void use_cmd(int fd, command *cmd);
 
 void user_cmd(int fd, command *cmd);
@@ -224,7 +227,7 @@ static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
     NULL,
     &subscribe_cmd,
     NULL,
-    NULL,
+    &unsubscribe_cmd,
     &use_cmd,
     &create_cmd,
     NULL,

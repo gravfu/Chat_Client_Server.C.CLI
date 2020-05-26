@@ -19,6 +19,7 @@ SRC	=		./backup_loader/load_channels.c			\
 			./commands/make_path.c					\
 			./commands/subscribe_cmd.c				\
 			./commands/switch_context.c				\
+			./commands/unsubscribe_cmd.c			\
 			./commands/use_cmd.c					\
 			./commands/user_cmd.c					\
 			./commands/users_cmd.c					\

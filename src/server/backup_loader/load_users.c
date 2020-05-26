@@ -28,7 +28,7 @@ void load_users()
         while (fscanf(user_info, format, u_name, u_uuid) == 2) {
             add_user(u_name, u_uuid);
             memset(u_name, 0, MAX_NAME_LENGTH);
-            memset(u_uuid, 0, 36);
+            memset(u_uuid, 0, UUID_STR_LEN);
         }
         fclose(user_info);
     }
@@ -58,7 +58,7 @@ static void alloc_user(user_t **new_user, const char *u_name,
     }
     memset((*new_user)->user_name, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_user)->user_name, u_name);
-    memset((*new_user)->user_uuid, 0, UUID_LENGTH + 1);
+    memset((*new_user)->user_uuid, 0, UUID_STR_LEN);
     strcpy((*new_user)->user_uuid, u_uuid);
     (*new_user)->next = NULL;
 }

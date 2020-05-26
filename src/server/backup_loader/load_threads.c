@@ -35,7 +35,7 @@ void load_threads(channel_t *channel, const char *channel_dir)
         while (fscanf(thread_info, format, t_title, t_uuid, t_init) == 3) {
             add_thread(channel, t_title, t_uuid, t_init);
             memset(t_title, 0, MAX_NAME_LENGTH);
-            memset(t_uuid, 0, 36);
+            memset(t_uuid, 0, UUID_STR_LEN);
             memset(t_init, 0, MAX_BODY_LENGTH);
         }
         fclose(thread_info);
@@ -69,7 +69,7 @@ static void alloc_thread(thread_t **new_thread, const char *t_title,
     }
     memset((*new_thread)->thread_title, 0, MAX_NAME_LENGTH + 1);
     strcpy((*new_thread)->thread_title, t_title);
-    memset((*new_thread)->thread_uuid, 0, UUID_LENGTH + 1);
+    memset((*new_thread)->thread_uuid, 0, UUID_STR_LEN);
     strcpy((*new_thread)->thread_uuid, t_uuid);
     memset((*new_thread)->thread_init, 0, MAX_BODY_LENGTH + 1);
     strcpy((*new_thread)->thread_init, t_init);
