@@ -86,3 +86,8 @@ team_t *find_team(const char *team_name, const char *team_uuid)
     }
     return (NULL);
 }
+
+const team_t *get_teams()
+{
+    return (team_list);
+}

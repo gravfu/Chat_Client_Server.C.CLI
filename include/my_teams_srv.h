@@ -155,13 +155,25 @@ user_t *find_user(const char *user_name, const char *user_uuid);
 
 user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid);
 
+char *get_comments_str(connex_t *user_connex);
+
+char *get_channels_str(connex_t *user_connex);
+
 int get_sock(char *port);
 
 const user_t *get_users();
 
+const team_t *get_teams();
+
+char *get_teams_str();
+
+char *get_threads_str(connex_t *user_connex);
+
 void help_cmd(int fd, command *cmd);
 
 void launch_server(char *port);
+
+void list_cmd(int fd, command *cmd);
 
 void listen_for_conn(int listen_fd);
 
@@ -224,7 +236,7 @@ static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
     &unsubscribe_cmd,
     &use_cmd,
     &create_cmd,
-    NULL,
+    &list_cmd,
     NULL
 };
 

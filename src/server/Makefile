@@ -16,6 +16,8 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./commands/create_cmd.c					\
 			./commands/create_resource.c			\
 			./commands/help_cmd.c					\
+			./commands/list_cmd.c					\
+			./commands/list_resources.c				\
 			./commands/login_cmd.c					\
 			./commands/logout_cmd.c					\
 			./commands/make_path.c					\
