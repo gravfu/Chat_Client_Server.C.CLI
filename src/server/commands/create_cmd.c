@@ -5,6 +5,7 @@
 ** create_cmd
 */
 
+#include "logging_server.h"
 #include "my_teams_srv.h"
 #include "return_codes.h"
 #include <stddef.h>
@@ -14,7 +15,7 @@
 
 static int contains_errors(int fd, connex_t *user_connex, command *cmd);
 
-static void create(int fd, connex_t *user_connex, command *cmd);
+static void create(const char *uuid_str, connex_t *user_connex, command *cmd);
 
 static void create_helper(connex_t *user_connex, command *cmd,
     const char *uuid_str);
@@ -22,11 +23,15 @@ static void create_helper(connex_t *user_connex, command *cmd,
 void create_cmd(int fd, command *cmd)
 {
     char rsp[256] = {0};
+    char uuid_str[UUID_STR_LEN] = {0};
     connex_t *user_connex = find_connex(fd);
+    uuid_t uuid;
 
     if (contains_errors(fd, user_connex, cmd))
         return;
-    create(fd, user_connex, cmd);
+    uuid_generate(uuid);
+    uuid_unparse_lower(uuid, uuid_str);
+    create(uuid_str, user_connex, cmd);
     sprintf(rsp, "START_RSP\r\n%d: Resource created successfully.\r\n"
         "END_RSP\r\n", RSP_USE);
     send_all(fd, rsp, strlen(rsp));
@@ -102,26 +107,27 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 //     // }
 // }
 
-static void create(int fd, connex_t *user_connex, command *cmd)
+static void create(const char *uuid_str, connex_t *user_connex,
+    command *cmd)
 {
-    char uuid_str[UUID_STR_LEN] = {0};
-    uuid_t uuid;
     channel_t *channel_context = NULL;
     thread_t *thread_context = NULL;
 
-    uuid_generate(uuid);
-    uuid_unparse_lower(uuid, uuid_str);
     if (user_connex->thread_cxt) {
         thread_context = (thread_t *)(user_connex->context);
         create_comment(thread_context, user_connex->user->user_name,
             cmd->args[0]);
-            return;
+        server_event_thread_new_message(thread_context->thread_uuid,
+            user_connex->user->user_uuid, cmd->args[0]);
+        return;
     }
     if (user_connex->channel_cxt) {
         channel_context = (channel_t *)(user_connex->context);
         add_thread(channel_context, cmd->args[0], uuid_str, cmd->args[1]);
         create_thread_file(channel_context, cmd->args[0], uuid_str,
             cmd->args[1]);
+        server_event_thread_created(channel_context->channel_uuid, uuid_str,
+            user_connex->user->user_uuid, cmd->args[1]);
         return;
     }
     create_helper(user_connex, cmd, uuid_str);
@@ -137,12 +143,16 @@ static void create_helper(connex_t *user_connex, command *cmd,
         add_chann(team_context, cmd->args[0], uuid_str,
             cmd->args[1]);
         create_channel_dir(team_context, cmd->args[0], uuid_str, cmd->args[1]);
+        server_event_channel_created(team_context->team_uuid, uuid_str,
+            cmd->args[0]);
         return;
     }
     if (!user_connex->team_cxt && !user_connex->channel_cxt &&
         !user_connex->thread_cxt) {
         add_team(cmd->args[0], uuid_str, cmd->args[1]);
         create_team_dir(cmd->args[0], uuid_str, cmd->args[1]);
+        server_event_team_created(uuid_str, cmd->args[0],
+            user_connex->user->user_uuid);
         return;
     }
 }

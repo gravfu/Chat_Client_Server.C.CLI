@@ -5,6 +5,7 @@
 ** unsubscribe_cmd
 */
 
+#include "logging_server.h"
 #include "my_teams_srv.h"
 #include "return_codes.h"
 #include <stddef.h>
@@ -28,6 +29,8 @@ void unsubscribe_cmd(int fd, command *cmd)
         user_connex->user->user_uuid);
     drop_sub(team, user_connex->user->user_name, user_connex->user->user_uuid);
     drop_team_sub(user_connex->user, team->team_name, team->team_uuid);
+    server_event_user_leave_a_team(team->team_uuid,
+        user_connex->user->user_uuid);
     sprintf(rsp, "START_RSP\r\n%d: Successfully unsubscribed from %s.\r\n"
         "END_RSP\r\n", RSP_UNSUBSCRIBE, team->team_name);
     send_all(fd, rsp, strlen(rsp));

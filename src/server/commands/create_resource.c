@@ -82,7 +82,6 @@ void create_comment(thread_t *thread, const char *user_name,
 
     sprintf(t_file_path, format, channel->p_team->team_uuid,
         channel->channel_uuid, thread->thread_uuid);
-    printf("thread file path: %s\n", t_file_path);
     thread_file = fopen(t_file_path, "a+");
     fprintf(thread_file, "%s: %s\n\n", user_name, comment);
     fclose(thread_file);

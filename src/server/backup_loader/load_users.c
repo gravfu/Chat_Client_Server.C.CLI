@@ -5,6 +5,7 @@
 ** load_users
 */
 
+#include "logging_server.h"
 #include "my_teams_srv.h"
 #include <stddef.h>
 #include <stdio.h>
@@ -25,6 +26,7 @@ void load_users()
     if (user_info) {
         while (fscanf(user_info, format, u_name, u_uuid) == 2) {
             add_user(u_name, u_uuid);
+            server_event_user_loaded(u_uuid, u_name);
             memset(u_name, 0, MAX_NAME_LENGTH);
             memset(u_uuid, 0, UUID_STR_LEN);
         }

@@ -65,7 +65,7 @@ static void separate_args(char *buffer, int buff_size);
 
 void new_recv(int client_fd, command *cmd)
 {
-    static char buff[MAX_DESCRIPTION_LENGTH + 1] = {0};
+    char buff[MAX_DESCRIPTION_LENGTH + 1] = {0};
     int length = 0;
     unsigned int buff_loc = 0;
     unsigned int is_start = 0;

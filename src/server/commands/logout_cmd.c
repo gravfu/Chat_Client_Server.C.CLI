@@ -5,6 +5,7 @@
 ** logout_cmd
 */
 
+#include "logging_server.h"
 #include "my_teams_srv.h"
 #include "return_codes.h"
 #include <stdio.h>
@@ -20,6 +21,7 @@ void logout_cmd(int fd, command *cmd)
 
     if (contains_errors(fd, user_connex, cmd))
         return;
+    server_event_user_logged_out(user_connex->user->user_uuid);
     sprintf(rsp, "START_RSP\r\n%d: Logout successful.\r\nEND_RSP\r\n",
         RSP_LOGOUT);
     send_all(fd, rsp, strlen(rsp));

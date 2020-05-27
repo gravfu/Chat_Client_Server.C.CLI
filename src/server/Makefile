@@ -43,11 +43,15 @@ OBJ 	=	$(SRC:.c=.o)
 
 CC		=	gcc
 
+LIB_DIR	=	../../libs/myteams
+
 CFLAGS 	+= 	-Werror -Wextra
 
-LDFLAGS = 	-luuid
+LDFLAGS = 	-L$(LIB_DIR) -lmyteams -luuid
 
-INCLUDE	= 	-I../../include
+TMS_HDR =	../../include
+
+INCLUDE	= 	-I$(TMS_HDR) -I$(LIB_DIR)
 
 NAME 	=	myteams_server
 
