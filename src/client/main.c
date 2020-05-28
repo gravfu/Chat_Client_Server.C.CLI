@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "socket_handle.h"
 
-int usage(void)
+void usage(void)
 {
     printf("USAGE:  ./myteams_cli ip port\n\n");
     printf("\tip\tis the server ip address on which the server socket listens\n");

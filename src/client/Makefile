@@ -7,36 +7,49 @@
 
 CC		=	gcc
 
-FLAGS		=	-Werror -Wall -Wextra
+CFLAGS		=	-Werror -Wall -Wextra
 
 SRC		=	main.c \
-			socket_handle.c
+			socket_handle.c \
+			parser_func.c
 
 OBJ     	=       $(SRC:.c=.o)
 
 NAME    	=       myteams_cli
 
-INCLUDE		=		../../libs/myteams
+TMS_HDR =	../../include
 
-all:		$(NAME) $(NAME_QT)
+LIB_DIR	=	../../libs/myteams
+
+LDFLAGS = 	-L$(LIB_DIR) -lmyteams -luuid
+
+INCLUDE	= 	-I$(TMS_HDR) -I$(LIB_DIR)
+
+RM		=	rm -f
 
 %.o: %.c
 			$(CC) -g -c $< $(CFLAGS) $(INCLUDE) -o $@
 
+all:		$(NAME)
+
 $(NAME):	$(OBJ)
-		$(CC) $(FLAGS) -o $(NAME) $(OBJ)
+		$(CC) $(LDFLAGS) -o $(NAME) $(OBJ)
 
 clean:
-		rm -f $(OBJ)
-		rm -f *~
-		rm -f *#
+		$(RM) $(OBJ)
+		$(RM) *~
+		$(RM) *#
 
 fclean:		clean
-		rm -f $(NAME)
+		$(RM) $(NAME)
 
 re:		fclean all
 
 auteur:
 		echo $(USER) > auteur
 
-.PHONY: 	all clean fclean re
+.PHONY:
+			all clean fclean re
+
+.SILENT:
+			all clean fclean re

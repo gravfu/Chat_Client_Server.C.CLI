@@ -6,8 +6,11 @@
 */
 
 #include "socket_handle.h"
+#include "parser_func.h"
+#include <sys/select.h>
+#include <sys/types.h>
 
-int user_parser(char *buffer)
+/*int user_parser(char *buffer, int listenfd)
 {
     int read_var;
     memset(buffer, 0, 2048);
@@ -17,33 +20,96 @@ int user_parser(char *buffer)
         if (buffer[i] == ' ')
             buffer[i] = '\n';
     }
-    return read_var;
+    if (read_var > 1)
+            dprintf(listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
+    return 0;
+}*/
+
+int client_event_loggedin_handle(char *buffer, user_info *info)
+{
+    char *user = var_parser(buffer, "username:");
+    char *uuid = var_parser(buffer, "useruuid:");
+
+    strcpy(info->user, user);
+    strcpy(info->uuid, uuid);
+    printf("You are connected as %s\nYour UUID is: %s\n", user, uuid);
+    if (client_event_loggedin(uuid, user) != 1) {
+        printf("Error in client_event_loggedin\n");
+    }
+    return 0;
 }
 
-int loop_client(int listenfd)
+void parsing(char *buffer, user_info *info, char *cmd)
 {
-    int reader;
-    int exit = 0;
-    char buffer[2048];
-    size_t size = 1024;
-    int read_var = 2048;
+    if (strstr(buffer, "503") != NULL && strstr(cmd, "login") != NULL)
+        client_event_loggedin_handle(buffer, info);
+}
 
-    reader = read(listenfd, buffer, 1024);
-    printf("%s", buffer);
-    while (read_var > 0) { 
-        read_var = user_parser(buffer);
-        printf("BUFFER: %s\n", buffer);
-        if (read_var > 1) {
-            dprintf(listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
-            memset(buffer, 0, sizeof(buffer));
-            while (strstr(buffer, "END_CMD") == NULL && strstr(buffer, "END_RSP") == NULL && strstr(buffer, "500") == NULL) {
-                reader = read(listenfd, buffer, 2047);
-                if (reader > 1) {
-                    printf("BUFFER: %s", buffer);
-                }
-            }
+int read_output(int listenfd, char *cmd, user_info *info)
+{
+    char buffer[20001];
+    int reader;
+    memset(buffer, 0, sizeof(buffer));
+    reader = read(listenfd, buffer, sizeof(buffer));
+    if (reader > 0) {
+        printf("BUFFER: %s", buffer);
+        parsing(buffer, info, cmd);
+    } else if (reader == 0) {
+        printf("Connection closed by foreign host.\n");
+        exit(0);
+    } else {
+        printf("Error while reading data.\n");
+    }
+    return 0;
+}
+int socket_data_detected(char *buffer, int listenfd_socket, user_info *info)
+{
+    read_output(listenfd_socket, buffer, info);
+    return 0;
+}
+
+int stdin_data_detected(char *buffer, int listenfd_socket)
+{
+    int read_var;
+    memset(buffer, 0, 2048);
+    read_var = read(0, buffer, sizeof(buffer));
+    for (int i = 0; i < read_var; i++) {
+        if (buffer[i] == ' ')
+            buffer[i] = '\n';
+    }
+    if (read_var > 1)
+        dprintf(listenfd_socket, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
+    return 0;
+}
+
+int loop_client_a(int listenfd)
+{
+    int reader_sel;
+    char buffer[2048];
+    user_info info;
+    // Select
+    fd_set rfds_stdin;
+    fd_set rfds_set;
+    FD_ZERO(&rfds_stdin);
+    FD_SET(0, &rfds_stdin);
+    FD_SET(listenfd, &rfds_stdin);
+    printf("fd: %d\n", listenfd);
+    write(0, "\n?>", 3);
+    memset(buffer, 0, sizeof(buffer));
+    while (1) {
+        rfds_set = rfds_stdin;
+        reader_sel = select(listenfd+1, &rfds_set, NULL, NULL, NULL);
+        if (reader_sel < 0)
+            printf("select failed\n ");
+        if (reader_sel > 0) {
+            if (FD_ISSET(0, &rfds_set))
+                stdin_data_detected(buffer, listenfd);
+            if (FD_ISSET(listenfd, &rfds_set))
+                socket_data_detected(buffer, listenfd, &info);
+            
         }
     }
+    return 0;
 }
 
 int socket_handle(int port, char const *ip)
@@ -67,5 +133,5 @@ int socket_handle(int port, char const *ip)
         printf("Error while connecting to server\n");
         return 84;
     }
-    return loop_client(listenfd);
+    return loop_client_a(listenfd);
 }
