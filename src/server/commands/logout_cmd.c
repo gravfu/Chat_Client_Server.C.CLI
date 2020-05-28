@@ -23,7 +23,8 @@ void logout_cmd(int fd, command *cmd)
         return;
     server_event_user_logged_out(user_connex->user->user_uuid);
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
-        "END_RSP\r\n", RSP_LOGOUT);
+        "END_RSP\r\n", RSP_LOGOUT, user_connex->user->user_name,
+        user_connex->user->user_uuid);
     send_all(fd, rsp, strlen(rsp));
     delete_conn(fd);
     close(fd);
