@@ -33,7 +33,7 @@ void login_cmd(int fd, command *cmd)
     user_connex->logged_in = 1;
     user_connex->user = user;
     server_event_user_logged_in(user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d: Login successful.\r\nEND_RSP\r\n",
+    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n",
         RSP_LOGIN);
     send_all(fd, rsp, strlen(rsp));
 }

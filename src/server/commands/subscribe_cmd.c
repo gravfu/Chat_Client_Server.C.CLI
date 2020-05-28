@@ -33,8 +33,7 @@ void subscribe_cmd(int fd, command *cmd)
     subscribe(user_connex, team);
     server_event_user_join_a_team(team->team_uuid,
         user_connex->user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d: Successfully subscribed to %s.\r\n"
-        "END_RSP\r\n", RSP_SUBSCRIBE, team->team_name);
+    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_SUBSCRIBE);
     send_all(fd, rsp, strlen(rsp));
 }
 

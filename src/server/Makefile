@@ -21,6 +21,7 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./commands/login_cmd.c					\
 			./commands/logout_cmd.c					\
 			./commands/make_path.c					\
+			./commands/send_cmd.c					\
 			./commands/subscribe_cmd.c				\
 			./commands/subscribed_cmd.c				\
 			./commands/switch_context.c				\

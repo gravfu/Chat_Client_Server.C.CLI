@@ -29,11 +29,9 @@ void users_cmd(int fd, command *cmd)
         return;
     user_str = get_users_str();
     len_str = (user_str != NULL) ? strlen(user_str) : len_str;
-    rsp_len = strlen("START_RSP\r\n") + strlen("000: Subscribed to:\r\n") +
-        len_str + strlen("END_RSP\r\n");
+    rsp_len = strlen("START_RSP\r\n") + len_str + strlen("END_RSP\r\n");
     rsp = calloc(rsp_len, sizeof(char));
-    sprintf(rsp, "START_RSP\r\n%d: Users in domain:\r\n%sEND_RSP\r\n",
-        RSP_USERS, user_str);
+    sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_USERS, user_str);
     if (user_str) free(user_str);
     send_all(fd, rsp, strlen(rsp));
     free(rsp);

@@ -32,8 +32,7 @@ void create_cmd(int fd, command *cmd)
     uuid_generate(uuid);
     uuid_unparse_lower(uuid, uuid_str);
     create(uuid_str, user_connex, cmd);
-    sprintf(rsp, "START_RSP\r\n%d: Resource created successfully.\r\n"
-        "END_RSP\r\n", RSP_USE);
+    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_USE);
     send_all(fd, rsp, strlen(rsp));
 }
 

@@ -21,7 +21,7 @@ void help_cmd(int fd, command *cmd)
     rsp_len = strlen("START_RSP\r\n") + strlen("000: List of TPC Commands:\r\n")
         + strlen(HELP_MSG) + strlen("END_RSP\r\n");
     rsp = calloc(rsp_len, sizeof(char));
-    sprintf(rsp, "START_RSP\r\n%d: List of TPC Commands:\r\n%sEND_RSP\r\n",
+    sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n",
         RSP_HELP, HELP_MSG);
     send_all(fd, rsp, strlen(rsp));
     free(rsp);

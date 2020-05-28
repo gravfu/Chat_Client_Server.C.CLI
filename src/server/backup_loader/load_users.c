@@ -65,7 +65,8 @@ static void alloc_user(user_t **new_user, const char *u_name,
     sprintf(user_dir, "./backup/users/usr_%s/", u_uuid);
     (*new_user)->team_subs = NULL;
     load_team_subs(*new_user, user_dir);
-    // load chats ...
+    (*new_user)->chats = NULL;
+    load_chats(*new_user, user_dir);
     (*new_user)->next = NULL;
 }
 

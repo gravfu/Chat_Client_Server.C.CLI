@@ -32,11 +32,9 @@ void subscribed_cmd(int fd, command *cmd)
     else
         str = get_sub_users(cmd);
     len_str = (str != NULL) ? strlen(str) : len_str;
-    rsp_len = strlen("START_RSP\r\n") + strlen("000: Subscribed to:\r\n") +
-        len_str + strlen("END_RSP\r\n");
+    rsp_len = strlen("START_RSP\r\n") + len_str + strlen("END_RSP\r\n");
     rsp = calloc(rsp_len, sizeof(char));
-    sprintf(rsp, "START_RSP\r\n%d: Subcribed to:\r\n%sEND_RSP\r\n",
-        RSP_SUBSCRIBED, str);
+    sprintf(rsp, "START_RSP\r\n%d\r\n%s\r\nEND_RSP\r\n", RSP_SUBSCRIBED, str);
     if (str) free(str);
     send_all(fd, rsp, strlen(rsp));
     free(rsp);

@@ -101,6 +101,8 @@ int accept_conn(int server_fd, struct sockaddr_storage *client_addr);
 void add_chann(team_t *p_team, const char *c_name, const char *c_uuid,
     const char *c_desc);
 
+void add_chat(user_t *user, const char *chat_ref);
+
 void add_connex(int fd);
 
 void add_sub(team_t *p_team, const char *s_name, const char *s_uuid);
@@ -144,6 +146,8 @@ int drop_team_sub(user_t *user, const char *t_name, const char *t_uuid);
 channel_t *find_channel(channel_t *channel_list, const char *channel_name,
     const char *channel_uuid);
 
+chat_t *find_chat(chat_t *chat_list, const char *recipient);
+
 connex_t *find_connex(int fd);
 
 team_t *find_team(const char *team_name, const char *team_uuid);
@@ -179,6 +183,8 @@ void listen_for_conn(int listen_fd);
 
 void load_channels(team_t *team, const char *team_dir);
 
+void load_chats(user_t *user, const char *user_dir);
+
 void load_subs(team_t *team, const char *team_dir);
 
 void load_teams();
@@ -205,6 +211,8 @@ void respond(int fd, command *cmd);
 
 void send_all(int client_fd, const char *buffer, int len);
 
+void send_cmd(int fd, command *cmd);
+
 void send_error(int error_num, const char *msg, int client_fd);
 
 void subscribe_cmd(int fd, command *cmd);
@@ -229,7 +237,7 @@ static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
     &logout_cmd,
     &users_cmd,
     &user_cmd,
-    NULL,
+    &send_cmd,
     NULL,
     &subscribe_cmd,
     &subscribed_cmd,
