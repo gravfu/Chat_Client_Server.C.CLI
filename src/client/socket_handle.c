@@ -10,21 +10,6 @@
 #include <sys/select.h>
 #include <sys/types.h>
 
-/*int user_parser(char *buffer, int listenfd)
-{
-    int read_var;
-    memset(buffer, 0, 2048);
-    write(0, "\n?>", 3);
-    read_var = read(0, buffer, 2047);
-    for (int i = 0; i < read_var; i++) {
-        if (buffer[i] == ' ')
-            buffer[i] = '\n';
-    }
-    if (read_var > 1)
-            dprintf(listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
-    return 0;
-}*/
-
 int client_event_loggedin_handle(char *buffer, user_info *info)
 {
     char *user = var_parser(buffer, "username:");
@@ -95,15 +80,18 @@ int stdin_data_detected(char *buffer, int listenfd_socket)
                 buffer[i] = '\n';
         }
         dprintf(listenfd_socket, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
+    } else if (read_var == 0) {
+        return 1;
     }
     return 0;
 }
 
-int loop_client_a(int listenfd)
+int loop_client_a(int const listenfd)
 {
     int reader_sel;
-    char buffer[2048];
+    char buffer[4097];
     user_info info;
+    int tmp = 0;
     // Select
     fd_set rfds_stdin;
     fd_set rfds_set;
@@ -111,16 +99,20 @@ int loop_client_a(int listenfd)
     FD_SET(0, &rfds_stdin);
     FD_SET(listenfd, &rfds_stdin);
     memset(buffer, 0, sizeof(buffer));
-    while (1) {
+    while (tmp != 4) {
         rfds_set = rfds_stdin;
         reader_sel = select(listenfd+1, &rfds_set, NULL, NULL, NULL);
         if (reader_sel < 0)
             printf("select failed\n ");
         if (reader_sel > 0) {
-            if (FD_ISSET(0, &rfds_set))
-                stdin_data_detected(buffer, listenfd);
             if (FD_ISSET(listenfd, &rfds_set))
                 socket_data_detected(buffer, listenfd, &info);
+            if (FD_ISSET(0, &rfds_set) && tmp == 0)
+                tmp = stdin_data_detected(buffer, listenfd);
+            if (tmp == 2)
+                tmp = 4;
+            if (tmp == 1)
+                tmp = 2;
             //if (FD_ISSET(0, &rfds_set) || FD_ISSET(listenfd, &rfds_set))
                 //write(0, "\n?>", 3);
         }
