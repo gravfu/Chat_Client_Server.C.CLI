@@ -32,8 +32,20 @@ int client_event_loggedin_handle(char *buffer, user_info *info)
 
     strcpy(info->user, user);
     strcpy(info->uuid, uuid);
-    printf("You are connected as %s\nYour UUID is: %s\n", user, uuid);
+    //printf("You are connected as %s\nYour UUID is: %s\n", user, uuid);
     if (client_event_loggedin(uuid, user) != 1) {
+        printf("Error in client_event_loggedin\n");
+    }
+    if (user)
+        free(user);
+    if (uuid)
+        free(uuid);
+    return 0;
+}
+
+int client_event_loggedout_handle(user_info *info)
+{
+    if (client_event_loggedout(info->uuid, info->user) != 1) {
         printf("Error in client_event_loggedin\n");
     }
     return 0;
@@ -43,6 +55,10 @@ void parsing(char *buffer, user_info *info, char *cmd)
 {
     if (strstr(buffer, "503") != NULL && strstr(cmd, "login") != NULL)
         client_event_loggedin_handle(buffer, info);
+    else if (strstr(buffer, "504") != NULL)
+        client_event_loggedout_handle(info);
+    else
+        printf("BUFFER: %s", buffer);
 }
 
 int read_output(int listenfd, char *cmd, user_info *info)
@@ -52,7 +68,6 @@ int read_output(int listenfd, char *cmd, user_info *info)
     memset(buffer, 0, sizeof(buffer));
     reader = read(listenfd, buffer, sizeof(buffer));
     if (reader > 0) {
-        printf("BUFFER: %s", buffer);
         parsing(buffer, info, cmd);
     } else if (reader == 0) {
         printf("Connection closed by foreign host.\n");
@@ -71,14 +86,16 @@ int socket_data_detected(char *buffer, int listenfd_socket, user_info *info)
 int stdin_data_detected(char *buffer, int listenfd_socket)
 {
     int read_var;
-    memset(buffer, 0, 2048);
-    read_var = read(0, buffer, sizeof(buffer));
-    for (int i = 0; i < read_var; i++) {
-        if (buffer[i] == ' ')
-            buffer[i] = '\n';
-    }
-    if (read_var > 1)
+    memset(buffer, 0, 4096);
+    //sleep(0.0001);
+    read_var = read(0, buffer, 4096);
+    if (read_var > 1) {
+        for (int i = 0; i < read_var; i++) {
+            if (buffer[i] == ' ')
+                buffer[i] = '\n';
+        }
         dprintf(listenfd_socket, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
+    }
     return 0;
 }
 
@@ -93,8 +110,6 @@ int loop_client_a(int listenfd)
     FD_ZERO(&rfds_stdin);
     FD_SET(0, &rfds_stdin);
     FD_SET(listenfd, &rfds_stdin);
-    printf("fd: %d\n", listenfd);
-    write(0, "\n?>", 3);
     memset(buffer, 0, sizeof(buffer));
     while (1) {
         rfds_set = rfds_stdin;
@@ -106,7 +121,8 @@ int loop_client_a(int listenfd)
                 stdin_data_detected(buffer, listenfd);
             if (FD_ISSET(listenfd, &rfds_set))
                 socket_data_detected(buffer, listenfd, &info);
-            
+            //if (FD_ISSET(0, &rfds_set) || FD_ISSET(listenfd, &rfds_set))
+                //write(0, "\n?>", 3);
         }
     }
     return 0;
