@@ -213,7 +213,7 @@ void send_all(int client_fd, const char *buffer, int len);
 
 void send_cmd(int fd, command *cmd);
 
-void send_error(int error_num, const char *msg, int client_fd);
+void send_error(int error_num, int client_fd);
 
 void subscribe_cmd(int fd, command *cmd);
 

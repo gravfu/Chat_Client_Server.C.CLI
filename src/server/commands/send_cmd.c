@@ -41,20 +41,20 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     user_t *user = NULL;
 
     if (!user_connex->user || !user_connex->logged_in) {
-        send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
+        send_error(ERR_NOTCONNECTED, fd);
         return (1);
     }
     if (cmd->num_args > 2) {
-        send_error(ERR_TOOMANYPARAMS, "Too many parameters.", fd);
+        send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
     if (cmd->num_args < 2) {
-        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.", fd);
+        send_error(ERR_NEEDMOREPARAMS, fd);
         return (1);
     }
     user = find_user(NULL, cmd->args[0]);
     if (!user) {
-        send_error(ERR_NOSUCHUSER, "Invalid recipient.", fd);
+        send_error(ERR_NOSUCHUSER, fd);
         return (1);
     }
     return (0);

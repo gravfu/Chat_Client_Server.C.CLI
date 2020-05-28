@@ -30,10 +30,10 @@ void send_all(int client_fd, const char *buffer, int len)
     }
 }
 
-void send_error(int error_num, const char *msg, int client_fd)
+void send_error(int error_num, int client_fd)
 {
     char err_msg[256] = {0};
 
-    sprintf(err_msg, "START_RSP\r\n%d: %s\r\nEND_RSP\r\n", error_num, msg);
+    sprintf(err_msg, "START_RSP\r\n%d\r\nEND_RSP\r\n", error_num);
     send_all(client_fd, err_msg, strlen(err_msg));
 }

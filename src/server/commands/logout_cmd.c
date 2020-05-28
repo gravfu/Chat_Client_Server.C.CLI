@@ -22,7 +22,8 @@ void logout_cmd(int fd, command *cmd)
     if (contains_errors(fd, user_connex, cmd))
         return;
     server_event_user_logged_out(user_connex->user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_LOGOUT);
+    sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
+        "END_RSP\r\n", RSP_LOGOUT);
     send_all(fd, rsp, strlen(rsp));
     delete_conn(fd);
     close(fd);
@@ -31,11 +32,11 @@ void logout_cmd(int fd, command *cmd)
 static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 {
     if (!user_connex->user || !user_connex->logged_in) {
-        send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
+        send_error(ERR_NOTCONNECTED, fd);
         return (1);
     }
     if (cmd->num_args != 0) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
+        send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
     return (0);

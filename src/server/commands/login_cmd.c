@@ -33,8 +33,8 @@ void login_cmd(int fd, command *cmd)
     user_connex->logged_in = 1;
     user_connex->user = user;
     server_event_user_logged_in(user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n",
-        RSP_LOGIN);
+    sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
+        "END_RSP\r\n", RSP_LOGIN, user->user_name, user->user_uuid);
     send_all(fd, rsp, strlen(rsp));
 }
 
@@ -42,15 +42,15 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 {
     if (user_connex->logged_in &&
         strcmp(user_connex->user->user_name, cmd->args[0]) == 0) {
-        send_error(ERR_ALREADYCONNECTED, "Already logged in.", fd);
+        send_error(ERR_ALREADYCONNECTED, fd);
         return (1);
     }
     if (cmd->num_args == 0) {
-        send_error(ERR_NEEDMOREPARAMS, "Missing parameters.", fd);
+        send_error(ERR_NEEDMOREPARAMS, fd);
         return (1);
     }
     if (cmd->num_args > 1) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
+        send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
     return (0);

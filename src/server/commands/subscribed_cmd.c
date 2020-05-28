@@ -45,17 +45,17 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     team_t *team = NULL;
 
     if (!user_connex->logged_in) {
-        send_error(ERR_NOTCONNECTED, "Not logged in.", fd);
+        send_error(ERR_NOTCONNECTED, fd);
         return (1);
     }
     if (cmd->num_args > 1) {
-        send_error(ERR_TOOMANYPARAMS, "Too many paramters.", fd);
+        send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
     if (cmd->num_args == 1) {
         team = find_team(NULL, cmd->args[0]);
         if (!team) {
-            send_error(ERR_NOSUCHTEAM, "No such team exists.", fd);
+            send_error(ERR_NOSUCHTEAM, fd);
             return (1);
         }
     }
