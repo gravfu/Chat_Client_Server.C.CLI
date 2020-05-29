@@ -12,16 +12,16 @@
 #include <stdio.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static int err_check_helper(int fd, connex_t *user_connex, command *cmd);
+static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd);
 
 static void subscribe(connex_t *user_connex, team_t *team);
 
 static void subscribe_helper(const char *sub_info_path,
     const char *team_sub_info_path, connex_t *user_connex, team_t *team);
 
-void subscribe_cmd(int fd, command *cmd)
+void subscribe_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
@@ -33,11 +33,12 @@ void subscribe_cmd(int fd, command *cmd)
     subscribe(user_connex, team);
     server_event_user_join_a_team(team->team_uuid,
         user_connex->user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_SUBSCRIBE);
-    send_all(fd, rsp, strlen(rsp));
+    sprintf(rsp, "START_RSP\r\n%d\r\nuseruuid: %s teamuuid: %s\r\nEND_RSP\r\n",
+        RSP_SUBSCRIBE, user_connex->user->user_uuid, team->team_uuid);
+    add_notification(user_connex->user, rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (!user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, fd);
@@ -54,7 +55,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     return (err_check_helper(fd, user_connex, cmd));
 }
 
-static int err_check_helper(int fd, connex_t *user_connex, command *cmd)
+static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd)
 {
     team_t *team = find_team(NULL, cmd->args[0]);
     user_t *sub = NULL;

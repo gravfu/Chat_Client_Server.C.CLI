@@ -8,8 +8,9 @@
 #ifndef LOAD_THREAD_H_
 #define LOAD_THREAD_H_
 
+#include "my_teams_srv.h"
 #include <stddef.h>
 
-static const char *parent_dir = NULL;
+channel_t *parent_chann = NULL;
 
 #endif /* !LOAD_THREAD_H_ */

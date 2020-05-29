@@ -15,12 +15,14 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./backup_loader/load_users.c			\
 			./commands/create_cmd.c					\
 			./commands/create_resource.c			\
+			./commands/get_comments.c				\
 			./commands/help_cmd.c					\
 			./commands/list_cmd.c					\
 			./commands/list_resources.c				\
 			./commands/login_cmd.c					\
 			./commands/logout_cmd.c					\
 			./commands/make_path.c					\
+			./commands/messages_cmd.c				\
 			./commands/send_cmd.c					\
 			./commands/subscribe_cmd.c				\
 			./commands/subscribed_cmd.c				\
@@ -30,10 +32,14 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./commands/user_cmd.c					\
 			./commands/users_cmd.c					\
 			./connex_mgmt/accept_conn.c				\
+			./connex_mgmt/command_manip.c			\
 			./connex_mgmt/connect_list_manips.c		\
 			./connex_mgmt/get_sock.c				\
+			./connex_mgmt/is_connected.c			\
 			./connex_mgmt/listen_for_conn.c			\
 			./connex_mgmt/monitor_fds.c				\
+			./connex_mgmt/notification_manip.c		\
+			./connex_mgmt/notify_many.c				\
 			./connex_mgmt/recv_all.c				\
 			./connex_mgmt/respond.c					\
 			./connex_mgmt/send_all.c				\
@@ -70,7 +76,7 @@ clean:
 			$(RM) $(OBJ)
 
 fclean: 	clean
-			$(RM) $(EXE)
+			$(RM) $(NAME)
 
 re: 		fclean	all
 

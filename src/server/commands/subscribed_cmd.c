@@ -12,13 +12,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
 char *get_sub_teams(connex_t *user_connex);
 
-char *get_sub_users(command *cmd);
+char *get_sub_users(command_t *cmd);
 
-void subscribed_cmd(int fd, command *cmd)
+void subscribed_cmd(int fd, command_t *cmd)
 {
     char *rsp = NULL;
     char *str = NULL;
@@ -36,11 +36,11 @@ void subscribed_cmd(int fd, command *cmd)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%s\r\nEND_RSP\r\n", RSP_SUBSCRIBED, str);
     if (str) free(str);
-    send_all(fd, rsp, strlen(rsp));
+    add_notification(user_connex->user, rsp);
     free(rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     team_t *team = NULL;
 
@@ -83,7 +83,7 @@ char *get_sub_teams(connex_t *user_connex)
     return (all_sub_teams);
 }
 
-char *get_sub_users(command *cmd)
+char *get_sub_users(command_t *cmd)
 {
     char buff[128] = {0};
     char *all_sub_users = NULL;

@@ -12,9 +12,9 @@
 #include <string.h>
 #include <unistd.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-void logout_cmd(int fd, command *cmd)
+void logout_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
@@ -25,12 +25,11 @@ void logout_cmd(int fd, command *cmd)
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
         "END_RSP\r\n", RSP_LOGOUT, user_connex->user->user_name,
         user_connex->user->user_uuid);
-    send_all(fd, rsp, strlen(rsp));
+    notify_connected(rsp);
     delete_conn(fd);
-    close(fd);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (!user_connex->user || !user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, fd);

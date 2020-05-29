@@ -12,11 +12,11 @@
 #include <stdio.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static int err_check_helper(int fd, connex_t *user_connex, command *cmd);
+static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd);
 
-void unsubscribe_cmd(int fd, command *cmd)
+void unsubscribe_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
@@ -31,11 +31,12 @@ void unsubscribe_cmd(int fd, command *cmd)
     drop_team_sub(user_connex->user, team->team_name, team->team_uuid);
     server_event_user_leave_a_team(team->team_uuid,
         user_connex->user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_UNSUBSCRIBE);
+    sprintf(rsp, "START_RSP\r\n%d\r\nuseruuid: %s teamuuid: %s\r\nEND_RSP\r\n",
+        RSP_UNSUBSCRIBE, user_connex->user->user_uuid, team->team_uuid);
     send_all(fd, rsp, strlen(rsp));
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     team_t *team = NULL;
 
@@ -54,7 +55,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     return (err_check_helper(fd, user_connex, cmd));
 }
 
-static int err_check_helper(int fd, connex_t *user_connex, command *cmd)
+static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd)
 {
     team_t *team = find_team(NULL, cmd->args[0]);
     user_t *sub = NULL;

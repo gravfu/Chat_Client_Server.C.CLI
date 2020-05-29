@@ -12,11 +12,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
 static char *get_list(connex_t *user_connex);
 
-void list_cmd(int fd, command *cmd)
+void list_cmd(int fd, command_t *cmd)
 {
     char *rsp = NULL;
     char *str = NULL;
@@ -31,13 +31,13 @@ void list_cmd(int fd, command *cmd)
     rsp_len = strlen("START_RSP\r\n") + strlen("000: Listing:\r\n") +
         len_str + strlen("END_RSP\r\n");
     rsp = calloc(rsp_len, sizeof(char));
-    sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_SUBSCRIBED, str);
+    sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_LIST, str);
     if (str) free(str);
     send_all(fd, rsp, strlen(rsp));
     free(rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (!user_connex->user || !user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, fd);

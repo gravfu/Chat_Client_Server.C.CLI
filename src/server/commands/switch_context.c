@@ -15,7 +15,7 @@ void no_switch(connex_t *user_connex)
     user_connex->thread_cxt = 0;
 }
 
-void team_switch(connex_t *user_connex, command *cmd)
+void team_switch(connex_t *user_connex, command_t *cmd)
 {
     team_t *team = find_team(NULL, cmd->args[0]);
 
@@ -25,7 +25,7 @@ void team_switch(connex_t *user_connex, command *cmd)
     user_connex->thread_cxt = 0;
 }
 
-void channel_switch(connex_t *user_connex, command *cmd)
+void channel_switch(connex_t *user_connex, command_t *cmd)
 {
     team_t *team = find_team(NULL, cmd->args[0]);
     channel_t *channel = find_channel(team->channels, NULL, cmd->args[1]);
@@ -36,7 +36,7 @@ void channel_switch(connex_t *user_connex, command *cmd)
     user_connex->thread_cxt = 0;
 }
 
-void thread_switch(connex_t *user_connex, command *cmd)
+void thread_switch(connex_t *user_connex, command_t *cmd)
 {
     team_t *team = find_team(NULL, cmd->args[0]);
     channel_t *channel = find_channel(team->channels, NULL, cmd->args[1]);

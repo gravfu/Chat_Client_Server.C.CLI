@@ -14,13 +14,13 @@
 #include <sys/types.h>
 #include <uuid/uuid.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
 static void create_user_dir(const char *u_name, const char *u_uuid_str);
 
-static user_t *create_user(command *cmd);
+static user_t *create_user(command_t *cmd);
 
-void login_cmd(int fd, command *cmd)
+void login_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
@@ -35,10 +35,10 @@ void login_cmd(int fd, command *cmd)
     server_event_user_logged_in(user->user_uuid);
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
         "END_RSP\r\n", RSP_LOGIN, user->user_name, user->user_uuid);
-    send_all(fd, rsp, strlen(rsp));
+    notify_connected(rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (user_connex->logged_in &&
         strcmp(user_connex->user->user_name, cmd->args[0]) == 0) {
@@ -75,7 +75,7 @@ static void create_user_dir(const char *u_name, const char *u_uuid_str)
     fclose(user_info);
 }
 
-static user_t *create_user(command *cmd)
+static user_t *create_user(command_t *cmd)
 {
     char u_uuid_str[UUID_STR_LEN] = {0};
     user_t *user = NULL;

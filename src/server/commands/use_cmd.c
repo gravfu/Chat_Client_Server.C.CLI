@@ -10,15 +10,15 @@
 #include <stdio.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static int check_context(int fd, command *cmd);
+static int check_context(int fd, command_t *cmd);
 
-static int check_context_helper(int fd, command *cmd, channel_t *channel);
+static int check_context_helper(int fd, command_t *cmd, channel_t *channel);
 
-void change_context(connex_t *user_connex, command *cmd);
+void change_context(connex_t *user_connex, command_t *cmd);
 
-void use_cmd(int fd, command *cmd)
+void use_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
@@ -27,10 +27,10 @@ void use_cmd(int fd, command *cmd)
         return;
     change_context(user_connex, cmd);
     sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_USE);
-    send_all(fd, rsp, strlen(rsp));
+    add_notification(user_connex->user, rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (!user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, fd);
@@ -43,7 +43,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     return (check_context(fd, cmd));
 }
 
-static int check_context(int fd, command *cmd)
+static int check_context(int fd, command_t *cmd)
 {
     channel_t *channel = NULL;
     team_t *team = NULL;
@@ -65,7 +65,7 @@ static int check_context(int fd, command *cmd)
     return (check_context_helper(fd, cmd, channel));
 }
 
-static int check_context_helper(int fd, command *cmd, channel_t *channel)
+static int check_context_helper(int fd, command_t *cmd, channel_t *channel)
 {
     thread_t *thread = NULL;
 
@@ -79,7 +79,7 @@ static int check_context_helper(int fd, command *cmd, channel_t *channel)
     return (0);
 }
 
-void change_context(connex_t *user_connex, command *cmd)
+void change_context(connex_t *user_connex, command_t *cmd)
 {
     switch (cmd->num_args) {
     case 0:

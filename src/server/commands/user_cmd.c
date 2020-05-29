@@ -10,23 +10,26 @@
 #include <stdio.h>
 #include <string.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-void user_cmd(int fd, command *cmd)
+void user_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     connex_t *user_connex = find_connex(fd);
     const user_t *found_user = NULL;
+    int status = 0;
 
     if (contains_errors(fd, user_connex, cmd))
         return;
     found_user = find_user(NULL, cmd->args[0]);
-    sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
-        "END_RSP\r\n", RSP_USER, found_user->user_name, found_user->user_uuid);
-    send_all(fd, rsp, strlen(rsp));
+    status = is_connected(found_user);
+    sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\" "
+        "status: \"%d\"\r\nEND_RSP\r\n", RSP_USER, found_user->user_name,
+        found_user->user_uuid, status);
+    add_notification(user_connex->user, rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     const user_t *found_user = NULL;
 

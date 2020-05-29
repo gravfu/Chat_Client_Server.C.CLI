@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void respond(int fd, command *cmd)
+void respond(int fd, command_t *cmd)
 {
     for (int i = 0; i < NUM_CMDS; i++) {
         if (strcmp(cmd->cmd, CMDS_STR[i]) == 0 && CMD_FUNCS[i]) {

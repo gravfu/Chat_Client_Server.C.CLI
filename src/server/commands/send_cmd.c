@@ -12,31 +12,38 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 static void add_chat_info(user_t *user, const char *rcvr_uuid);
 
-static void add_messages_to_chats(user_t *user, command *cmd);
+static void add_messages_to_chats(user_t *user, command_t *cmd);
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static void send_message(connex_t *user_connex, command *cmd);
+static void send_message(connex_t *user_connex, command_t *cmd);
 
 
-void send_cmd(int fd, command *cmd)
+void send_cmd(int fd, command_t *cmd)
 {
     connex_t *user_connex = find_connex(fd);
-    char rsp[256];
+    char rsp[30] = {0};
+    char notif[1024] = {0};
+    user_t *rcvr = NULL;
 
     if (contains_errors(fd, user_connex, cmd))
         return;
+    rcvr = find_user(NULL, cmd->args[0]);
     send_message(user_connex, cmd);
     sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_SEND);
-    send_all(fd, rsp, strlen(rsp));
+    sprintf(notif, "START_RSP\r\n%d\r\nuseruuid: %s body: %s\r\nEND_RSP\r\n",
+        NOTIF_MSGRCV, user_connex->user->user_uuid, cmd->args[1]);
     server_event_private_message_sended(user_connex->user->user_uuid,
         cmd->args[0], cmd->args[1]);
+    add_notification(rcvr, notif);
+    add_notification(user_connex->user, rsp);
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     user_t *user = NULL;
 
@@ -60,7 +67,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     return (0);
 }
 
-static void send_message(connex_t *user_connex, command *cmd)
+static void send_message(connex_t *user_connex, command_t *cmd)
 {
     chat_t *sender_chat = find_chat(user_connex->user->chats, cmd->args[0]);
     user_t *recipient = find_user(NULL, cmd->args[0]);
@@ -74,12 +81,14 @@ static void send_message(connex_t *user_connex, command *cmd)
     add_messages_to_chats(user_connex->user, cmd);
 }
 
-static void add_messages_to_chats(user_t *user, command *cmd)
+static void add_messages_to_chats(user_t *user, command_t *cmd)
 {
     char sender_path[4096] = {0};
     char receiver_path[4096] = {0};
+    char time_str[TIME_LEN];
     FILE *sender_chat = NULL;
     FILE *receiver_chat = NULL;
+    time_t now = time(NULL);
 
     sprintf(sender_path, "./backup/users/usr_%s/chat_%s", user->user_uuid,
         cmd->args[0]);
@@ -87,8 +96,11 @@ static void add_messages_to_chats(user_t *user, command *cmd)
         user->user_uuid);
     sender_chat = fopen(sender_path, "a+");
     receiver_chat = fopen(receiver_path, "a+");
-    fprintf(sender_chat, "%s: %s\r\n\n", user->user_uuid, cmd->args[1]);
-    fprintf(receiver_chat, "%s: %s\r\n\n", user->user_uuid, cmd->args[1]);
+    strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
+    fprintf(sender_chat, "%s: %s: %s\r\n\n", user->user_uuid, cmd->args[1],
+        time_str);
+    fprintf(receiver_chat, "%s: %s: %s\r\n\n", user->user_uuid, cmd->args[1],
+        time_str);
     fclose(sender_chat);
     fclose(receiver_chat);
 }

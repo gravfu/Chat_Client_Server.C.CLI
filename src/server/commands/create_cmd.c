@@ -11,16 +11,17 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <uuid/uuid.h>
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd);
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static void create(const char *uuid_str, connex_t *user_connex, command *cmd);
+static void create(const char *uuid_str, connex_t *user_connex, command_t *cmd);
 
-static void create_helper(connex_t *user_connex, command *cmd,
+static void create_helper(connex_t *user_connex, command_t *cmd,
     const char *uuid_str);
 
-void create_cmd(int fd, command *cmd)
+void create_cmd(int fd, command_t *cmd)
 {
     char rsp[256] = {0};
     char uuid_str[UUID_STR_LEN] = {0};
@@ -36,7 +37,7 @@ void create_cmd(int fd, command *cmd)
     send_all(fd, rsp, strlen(rsp));
 }
 
-static int contains_errors(int fd, connex_t *user_connex, command *cmd)
+static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (!user_connex->user || !user_connex->logged_in) {
         send_error(ERR_NOTCONNECTED, fd);
@@ -61,7 +62,7 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
     return (0);
 }
 
-// static int is_duplicate(int fd, connex_t *user_connex, command *cmd)
+// static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd)
 // {
 //     channel_t *channel_context = NULL;
 //     team_t *team_context = NULL;
@@ -107,24 +108,23 @@ static int contains_errors(int fd, connex_t *user_connex, command *cmd)
 // }
 
 static void create(const char *uuid_str, connex_t *user_connex,
-    command *cmd)
+    command_t *cmd)
 {
-    channel_t *channel_context = NULL;
-    thread_t *thread_context = NULL;
-
     if (user_connex->thread_cxt) {
-        thread_context = (thread_t *)(user_connex->context);
-        create_comment(thread_context, user_connex->user->user_name,
+        thread_t *thread_context = (thread_t *)(user_connex->context);
+        create_comment(thread_context, user_connex->user->user_uuid,
             cmd->args[0]);
         server_event_thread_new_message(thread_context->thread_uuid,
             user_connex->user->user_uuid, cmd->args[0]);
         return;
-    }
-    if (user_connex->channel_cxt) {
-        channel_context = (channel_t *)(user_connex->context);
-        add_thread(channel_context, cmd->args[0], uuid_str, cmd->args[1]);
-        create_thread_file(channel_context, cmd->args[0], uuid_str,
-            cmd->args[1]);
+    } else if (user_connex->channel_cxt) {
+        channel_t *channel_context = (channel_t *)(user_connex->context);
+        char time_str[TIME_LEN];
+        time_t now = time(NULL);
+        strftime(time_str, TIME_LEN, "%Y-%m-%d %H:%M:%S", localtime(&now));
+        set_parent_chan(channel_context);
+        add_thread(cmd->args[0], uuid_str, cmd->args[1], time_str);
+        create_thread_file(user_connex, cmd->args[0], uuid_str, cmd->args[1]);
         server_event_thread_created(channel_context->channel_uuid, uuid_str,
             user_connex->user->user_uuid, cmd->args[1]);
         return;
@@ -132,15 +132,12 @@ static void create(const char *uuid_str, connex_t *user_connex,
     create_helper(user_connex, cmd, uuid_str);
 }
 
-static void create_helper(connex_t *user_connex, command *cmd,
+static void create_helper(connex_t *user_connex, command_t *cmd,
     const char *uuid_str)
 {
-    team_t *team_context = NULL;
-
     if (user_connex->team_cxt) {
-        team_context = (team_t *)(user_connex->context);
-        add_chann(team_context, cmd->args[0], uuid_str,
-            cmd->args[1]);
+        team_t *team_context = (team_t *)(user_connex->context);
+        add_chann(team_context, cmd->args[0], uuid_str, cmd->args[1]);
         create_channel_dir(team_context, cmd->args[0], uuid_str, cmd->args[1]);
         server_event_channel_created(team_context->team_uuid, uuid_str,
             cmd->args[0]);

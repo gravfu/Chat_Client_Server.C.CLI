@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 static void alloc_thread(thread_t **new_thread, const char *t_title,
     const char *t_uuid, const char *t_init);
@@ -21,38 +22,42 @@ void load_threads(channel_t *channel, const char *channel_dir)
     char t_title[MAX_NAME_LENGTH + 1] = {0};
     char t_uuid[UUID_STR_LEN] = {0};
     char t_init[MAX_BODY_LENGTH + 1] = {0};
-    const char *format = "title: \"%[^\"]\" uuid: \"%[^\"]\" init: \"%[^\"]\"";
+    char t_timestamp[TIME_LEN] = {0};
+    const char *format = "title: \"%[^\"]\" uuid: \"%[^\"]\" init: \"%[^\"]\" "
+        "time: \"%[^\"]\"\n";
     FILE *thread_info = NULL;
 
     if (!channel || !channel_dir) return;
+    parent_chann = channel;
     sprintf(t_info_path, "%s%s", channel_dir, "threads/thread_info");
-    parent_dir = channel_dir;
     thread_info = fopen(t_info_path, "r");
     if (thread_info) {
-        while (fscanf(thread_info, format, t_title, t_uuid, t_init) == 3) {
-            add_thread(channel, t_title, t_uuid, t_init);
-            memset(t_title, 0, MAX_NAME_LENGTH);
-            memset(t_uuid, 0, UUID_STR_LEN);
-            memset(t_init, 0, MAX_BODY_LENGTH);
+        while (fscanf(thread_info, format, t_title, t_uuid, t_init, t_timestamp)
+            == 4) {
+            add_thread(t_title, t_uuid, t_init, t_timestamp);
         }
         fclose(thread_info);
     }
 }
 
-void add_thread(channel_t *p_channel, const char *t_title,
-    const char *t_uuid, const char *t_init)
+void add_thread(const char *t_title, const char *t_uuid, const char *t_init,
+    const char *t_timestamp)
 {
-    thread_t *list_cpy = p_channel->threads;
+    thread_t *list_cpy = parent_chann->threads;
     thread_t *new_thread = NULL;
 
     if (list_cpy == NULL) {
-        alloc_thread(&(p_channel->threads), t_title, t_uuid, t_init);
-        p_channel->threads->p_channel = p_channel;
+        alloc_thread(&(parent_chann->threads), t_title, t_uuid, t_init);
+        parent_chann->threads->p_channel = parent_chann;
+        memset(parent_chann->threads->timestamp, 0, TIME_LEN);
+        strcpy(parent_chann->threads->timestamp, t_timestamp);
     } else {
         while (list_cpy->next != NULL)
             list_cpy = list_cpy->next;
         alloc_thread(&new_thread, t_title, t_uuid, t_init);
-        list_cpy->p_channel = p_channel;
+        list_cpy->p_channel = parent_chann;
+        memset(list_cpy->timestamp, 0, TIME_LEN);
+        strcpy(list_cpy->timestamp, t_timestamp);
         list_cpy->next = new_thread;
     }
 }
@@ -87,4 +92,9 @@ thread_t *find_thread(thread_t *thread_list, const char *thread_title,
         thread_list = thread_list->next;
     }
     return (NULL);
+}
+
+void set_parent_chan(channel_t *p_chann)
+{
+    parent_chann = p_chann;
 }

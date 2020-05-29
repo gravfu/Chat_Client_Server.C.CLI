@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void help_cmd(int fd, command *cmd)
+void help_cmd(int fd, command_t *cmd)
 {
     char *rsp = NULL;
     unsigned int rsp_len = 0;

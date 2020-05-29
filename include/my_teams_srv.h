@@ -23,17 +23,20 @@
 #define MAX_DESCRIPTION_LENGTH 255
 #define MAX_BODY_LENGTH 512
 #define MAX_PENDING 10
+#define TIME_LEN 20
 
-typedef struct {
+typedef struct command {
     char cmd[MAX_COMMAND_LENGTH + 1];
     char **args;
     unsigned int num_args;
-} command;
+    struct command *next;
+} command_t;
 
 typedef struct thread {
     char thread_title[MAX_NAME_LENGTH + 1];
     char thread_uuid[UUID_STR_LEN];
     char thread_init[MAX_BODY_LENGTH + 1];
+    char timestamp[TIME_LEN];
     struct channel *p_channel;
     struct thread *next;
 } thread_t;
@@ -68,6 +71,13 @@ typedef struct user {
     struct chat *chats;
     struct user *next;
 } user_t;
+
+typedef struct notification {
+    char *msg;
+    size_t msg_len;
+    const user_t *rcvr;
+    struct notification *next;
+} notification_t;
 
 typedef struct connex {
     int sock_fd;
@@ -105,6 +115,8 @@ void add_chat(user_t *user, const char *chat_ref);
 
 void add_connex(int fd);
 
+void add_notification(const user_t *rcvr, const char *msg);
+
 void add_sub(team_t *p_team, const char *s_name, const char *s_uuid);
 
 void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
@@ -112,17 +124,17 @@ void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
 void add_team_sub(user_t *p_user, const char *t_name, const char *t_uuid,
     const char *t_desc);
 
-void add_thread(channel_t *p_channel, const char *t_title,
-    const char *t_uuid, const char *t_init);
+void add_thread(const char *t_title, const char *t_uuid, const char *t_init,
+    const char *t_timestamp);
 
 void add_user(const char *u_name, const char *u_uuid);
 
-void channel_switch(connex_t *user_connex, command *cmd);
+void channel_switch(connex_t *user_connex, command_t *cmd);
 
 void create_channel_dir(team_t *team, const char *c_name,
     const char *c_uuid_str, const char *c_desc);
 
-void create_cmd(int fd, command *cmd);
+void create_cmd(int fd, command_t *cmd);
 
 void create_comment(thread_t *thread, const char *user_name,
     const char* comment);
@@ -130,10 +142,12 @@ void create_comment(thread_t *thread, const char *user_name,
 void create_team_dir(const char *t_name, const char *t_uuid_str,
     const char *t_desc);
 
-void create_thread_file(channel_t *channel, const char *t_title,
+void create_thread_file(connex_t *user_connex, const char *t_title,
     const char *t_uuid_str, const char *t_init);
 
 void delete_conn(int fd);
+
+void del_notification(const notification_t *to_delete);
 
 void del_sub(user_t **sub_list, const char *sub_name, const char *sub_uuid);
 
@@ -161,7 +175,11 @@ user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid);
 
 char *get_comments_str(connex_t *user_connex);
 
+const connex_t *get_connex();
+
 char *get_channels_str(connex_t *user_connex);
+
+const notification_t *get_notifications();
 
 int get_sock(char *port);
 
@@ -173,11 +191,13 @@ char *get_teams_str();
 
 char *get_threads_str(connex_t *user_connex);
 
-void help_cmd(int fd, command *cmd);
+void help_cmd(int fd, command_t *cmd);
+
+int is_connected(const user_t *user);
 
 void launch_server(char *port);
 
-void list_cmd(int fd, command *cmd);
+void list_cmd(int fd, command_t *cmd);
 
 void listen_for_conn(int listen_fd);
 
@@ -195,50 +215,64 @@ void load_threads(channel_t *channel, const char *channel_dir);
 
 void load_users();
 
-void login_cmd(int fd, command *cmd);
+void login_cmd(int fd, command_t *cmd);
 
-void logout_cmd(int fd, command *cmd);
+void logout_cmd(int fd, command_t *cmd);
 
 int make_path(char *file_path, mode_t mode);
 
-void monitor_fds(int *fd_max, fd_set *read_fds, fd_set *master);
+void messages_cmd(int fd, command_t *cmd);
 
-void new_recv(int client_fd, command *cmd);
+void monitor_fds(int *fd_max, fd_set *child_sets[2], fd_set *master_sets[2]);
+
+void new_recv(int client_fd, command_t *cmd);
 
 void no_switch(connex_t *user_connex);
 
-void respond(int fd, command *cmd);
+void notify_connected(const char *message);
+
+void notify_domain(const char *message);
+
+void notify_team(team_t *team, const char *message);
+
+void recv_all(int client_fd, command_t **cmd_list);
+
+void respond(int fd, command_t *cmd);
 
 void send_all(int client_fd, const char *buffer, int len);
 
-void send_cmd(int fd, command *cmd);
+void send_cmd(int fd, command_t *cmd);
 
 void send_error(int error_num, int client_fd);
 
-void subscribe_cmd(int fd, command *cmd);
+void send_responses(fd_set *write_fds);
 
-void subscribed_cmd(int fd, command *cmd);
+void set_parent_chan(channel_t *p_chann);
 
-void team_switch(connex_t *user_connex, command *cmd);
+void subscribe_cmd(int fd, command_t *cmd);
 
-void thread_switch(connex_t *user_connex, command *cmd);
+void subscribed_cmd(int fd, command_t *cmd);
 
-void unsubscribe_cmd(int fd, command *cmd);
+void team_switch(connex_t *user_connex, command_t *cmd);
 
-void use_cmd(int fd, command *cmd);
+void thread_switch(connex_t *user_connex, command_t *cmd);
 
-void user_cmd(int fd, command *cmd);
+void unsubscribe_cmd(int fd, command_t *cmd);
 
-void users_cmd(int fd, command *cmd);
+void use_cmd(int fd, command_t *cmd);
 
-static void (* const CMD_FUNCS[14])(int fd, command *cmd) = {
+void user_cmd(int fd, command_t *cmd);
+
+void users_cmd(int fd, command_t *cmd);
+
+static void (* const CMD_FUNCS[14])(int fd, command_t *cmd) = {
     &help_cmd,
     &login_cmd,
     &logout_cmd,
     &users_cmd,
     &user_cmd,
     &send_cmd,
-    NULL,
+    &messages_cmd,
     &subscribe_cmd,
     &subscribed_cmd,
     &unsubscribe_cmd,
