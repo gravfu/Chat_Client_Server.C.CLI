@@ -10,8 +10,10 @@ CC		=	gcc
 CFLAGS		=	-Werror -Wall -Wextra
 
 SRC		=	main.c \
+			response_parser.c \
 			socket_handle.c \
-			parser_func.c
+			parser_func.c \
+			lib_func_handle.c
 
 OBJ     	=       $(SRC:.c=.o)
 
@@ -21,7 +23,7 @@ TMS_HDR =	../../include
 
 LIB_DIR	=	../../libs/myteams
 
-LDFLAGS = 	-L$(LIB_DIR) -lmyteams -luuid
+LDFLAGS = 	-L$(LIB_DIR) -lmyteams
 
 INCLUDE	= 	-I$(TMS_HDR) -I$(LIB_DIR)
 

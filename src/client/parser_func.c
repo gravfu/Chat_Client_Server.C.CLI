@@ -24,3 +24,14 @@ char *var_parser(char *buffer, char *to_searsh)
     new[gui2 - gui1] = '\0';
     return new;
 }
+
+void removeChar(char *s, int c)
+{
+    int j = 0;
+    int i = 0;
+    int n = strlen(s);
+    for (i = 0; i<n; i++)
+        if (s[i] != c)
+            s[j++] = s[i];
+    s[j] = '\0';
+}
