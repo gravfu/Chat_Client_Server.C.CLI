@@ -43,7 +43,7 @@ int client_event_thread_created_handle(char *buffer);
 int client_print_thread_created_handle(char *buffer);
 int client_print_channel_created_handle(char *buffer);
 int client_print_team_created_handle(char *buffer);
-int client_error_already_exist_handle(char *buffer, user_info *info);
+int client_error_already_exist_handle();
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */

@@ -22,9 +22,13 @@ int get_code(char *buffer)
 
 int err_parsing(int code, char *buffer)
 {
-    (void) code;
     (void) buffer;
-    return 1;
+    switch (code) {
+        case RSP_USER:
+        return client_error_already_exist_handle();
+        default:
+        return 1;
+    }
 }
 
 int rsp_parsing(int code, char *buffer)
@@ -40,6 +44,10 @@ int rsp_parsing(int code, char *buffer)
         return client_print_reply_created_handle(buffer);
         case RSP_CREATE_THREAD:
         return client_print_thread_created_handle(buffer);
+        case RSP_CREATE_CHANNNEL:
+        return client_print_channel_created_handle(buffer);
+        case RSP_CREATE_TEAM:
+        return client_print_team_created_handle(buffer);
         default:
         return 1;
     }

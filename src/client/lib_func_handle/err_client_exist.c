@@ -7,7 +7,7 @@
 
 #include "socket_handle.h"
 
-int client_error_already_exist_handle(char *buffer, user_info *info)
+int client_error_already_exist_handle()
 {
     if (client_error_already_exist() == -1) {
         printf("Error in client_event_loggedin\n");
