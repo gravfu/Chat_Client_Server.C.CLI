@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+static void get_threads_str_helper(char *buff, char *thread_body);
+
 char *get_teams_str()
 {
     char buff[128] = {0};
@@ -56,21 +58,31 @@ char *get_channels_str(connex_t *user_connex)
 
 char *get_threads_str(connex_t *user_connex)
 {
-    char buff[128] = {0};
+    char *buff = NULL;
     char *threads_str = NULL;
+    char *thread_body = NULL;
     const thread_t *threads = ((channel_t *)(user_connex->context))->threads;
     unsigned int length = 0;
 
     for (int i = 0; threads != NULL; i++) {
-        sprintf(buff, "thread title name: \"%s\" thread uuid: \"%s\"\r\n",
-            threads->thread_title, threads->thread_uuid);
+        thread_body = get_thread_body(threads);
+        buff = malloc((strlen(thread_body) + 256) * sizeof(char));
+        sprintf(buff, "threaduuid: \"%s\" useruuid: \"%s\" time: \"%s\" "
+            "threadtitle: \"%s\" body: \"%s\"\r\n", threads->thread_uuid,
+            threads->user_uuid, threads->timestamp, threads->thread_title,
+            thread_body);
         length += strlen(buff);
         threads_str = realloc(threads_str, (length + 1) * sizeof(char));
-        if (i == 0)
-            memset(threads_str, 0, (length + 1) * sizeof(char));
+        if (i == 0) memset(threads_str, 0, (length + 1) * sizeof(char));
         strcat(threads_str, buff);
-        memset(buff, 0, 128);
+        get_threads_str_helper(buff, thread_body);
         threads = threads->next;
     }
     return (threads_str);
+}
+
+static void get_threads_str_helper(char *buff, char *thread_body)
+{
+    if (buff) free(buff);
+    if (thread_body) free(thread_body);
 }

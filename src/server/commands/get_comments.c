@@ -38,19 +38,19 @@ static char *read_comments(FILE *thread_file, const thread_t *thread)
     char buff[1024] = {0};
     char cmt_body[MAX_BODY_LENGTH + 1] = {0};
     char *comments_str = NULL;
-    const char *format = "%s -> %s: %s\r\n\r\n";
+    const char *format = "%[^:]: %[^:]: %[^\r\n\n]\r\n\n";
     char time_str[TIME_LEN] = {0};
     char u_uuid[UUID_STR_LEN] = {0};
     int i = 0;
     int length = 0;
 
-    while (fscanf(thread_file, format, time_str, u_uuid, cmt_body) == 3) {
+    while (fscanf(thread_file, format, u_uuid, cmt_body, time_str) == 3) {
         sprintf(buff, "threaduuid: \"%s\" useruuid: \"%s\" time: \"%s\" "
             "body: \"%s\"\r\n", thread->thread_uuid, u_uuid, time_str,
             cmt_body);
         length += strlen(buff);
-        comments_str = realloc(comments_str, length * sizeof(char));
-        init_str(i++, comments_str, length);
+        comments_str = realloc(comments_str, (length + 1) * sizeof(char));
+        init_str(i++, comments_str, length + 1);
         strcat(comments_str, buff);
         memset(buff, 0, 1024);
     }

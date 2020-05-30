@@ -37,6 +37,7 @@ typedef struct thread {
     char thread_uuid[UUID_STR_LEN];
     char thread_init[MAX_BODY_LENGTH + 1];
     char timestamp[TIME_LEN];
+    char user_uuid[UUID_STR_LEN];
     struct channel *p_channel;
     struct thread *next;
 } thread_t;
@@ -124,12 +125,14 @@ void add_team(const char *c_name, const char *c_uuid, const char *c_desc);
 void add_team_sub(user_t *p_user, const char *t_name, const char *t_uuid,
     const char *t_desc);
 
-void add_thread(const char *t_title, const char *t_uuid, const char *t_init,
-    const char *t_timestamp);
+void add_thread(channel_t *p_channel, thread_t *to_copy);
 
 void add_user(const char *u_name, const char *u_uuid);
 
 void channel_switch(connex_t *user_connex, command_t *cmd);
+
+void create_channel(connex_t *user_connex, command_t *cmd,
+    const char *uuid_str);
 
 void create_channel_dir(team_t *team, const char *c_name,
     const char *c_uuid_str, const char *c_desc);
@@ -138,21 +141,26 @@ void create_channel_response(const char *uuid_str, connex_t *user_connex);
 
 void create_cmd(int fd, command_t *cmd);
 
-void create_comment(thread_t *thread, const char *user_name,
+void add_comment(thread_t *thread, const char *user_name,
     const char* comment);
+
+void create_comment(connex_t *user_connex, command_t *cmd);
 
 void create_comment_response(connex_t *user_connex, command_t *cmd,
     const char *timestamp);
 
 void create_thread_response(const char *uuid_str, connex_t *user_connex);
 
+void create_team(connex_t *user_connex, command_t *cmd, const char *uuid_str);
+
 void create_team_dir(const char *t_name, const char *t_uuid_str,
     const char *t_desc);
 
 void create_team_response(const char *uuid_str, connex_t *user_connex);
 
-void create_thread_file(connex_t *user_connex, const char *t_title,
-    const char *t_uuid_str, const char *t_init);
+void create_thread(connex_t *user_connex, command_t *cmd, const char *uuid_str);
+
+void create_thread_file(connex_t *user_connex, thread_t *new_thread);
 
 void delete_conn(int fd);
 
@@ -198,6 +206,8 @@ const team_t *get_teams();
 
 char *get_teams_str();
 
+char *get_thread_body(const thread_t *thread);
+
 char *get_threads_str(connex_t *user_connex);
 
 void help_cmd(int fd, command_t *cmd);
@@ -207,6 +217,14 @@ int is_connected(const user_t *user);
 void launch_server(char *port);
 
 void list_cmd(int fd, command_t *cmd);
+
+void list_channels_response(user_t *user, const char *channels);
+
+void list_comments_response(user_t *user, const char *comments);
+
+void list_teams_response(user_t *user, const char *teams);
+
+void list_threads_response(user_t *user, const char *threads);
 
 void listen_for_conn(int listen_fd);
 

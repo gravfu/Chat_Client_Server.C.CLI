@@ -11,8 +11,7 @@
 #include <sys/types.h>
 #include <time.h>
 
-void create_thread_info(channel_t *channel, const char *t_title,
-    const char *t_uuid_str, const char *t_init);
+void create_thread_info(channel_t *channel, thread_t *new_thread);
 
 void create_team_dir(const char *t_name, const char *t_uuid_str,
     const char *t_desc)
@@ -49,8 +48,7 @@ void create_channel_dir(team_t *team, const char *c_name,
     fclose(channel_info);
 }
 
-void create_thread_file(connex_t *user_connex, const char *t_title,
-    const char *t_uuid_str, const char *t_init)
+void create_thread_file(connex_t *user_connex, thread_t *new_thread)
 {
     channel_t *channel = (channel_t *)user_connex->context;
     char t_file_path[4096] = {0};
@@ -60,25 +58,24 @@ void create_thread_file(connex_t *user_connex, const char *t_title,
     FILE *thread = NULL;
     time_t now = time(NULL);
 
-    create_thread_info(channel, t_title, t_uuid_str, t_init);
+    create_thread_info(channel, new_thread);
     sprintf(t_file_path, format, channel->p_team->team_uuid,
-        channel->channel_uuid, t_uuid_str);
+        channel->channel_uuid, new_thread->thread_uuid);
     make_path(t_file_path, 0777);
     thread = fopen(t_file_path, "a+");
     strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-    fprintf(thread, "%s -> %s: %s\r\n\r\n", time_str,
-        user_connex->user->user_uuid, t_init);
+    fprintf(thread, "%s: %s: %s\r\n\n", user_connex->user->user_uuid,
+        new_thread->thread_init, time_str);
     fclose(thread);
 }
 
-void create_thread_info(channel_t *channel, const char *t_title,
-    const char *t_uuid_str, const char *t_init)
+void create_thread_info(channel_t *channel, thread_t *new_thread)
 {
     const char *info_format = "./backup/teams/team_%s/channels/chan_%s/"
         "/threads/thread_info";
     char t_info_path[4096] = {0};
-    const char *thread_format = "title: \"%s\" uuid: \"%s\" init: \"%s\""
-        " time: \"%s\"\n";
+    const char *thread_format = "u_uuid: \"%s\" title: \"%s\" uuid: \"%s\" "
+        "init: \"%s\" time: \"%s\"\n";
     char time_str[TIME_LEN] = {0};
     FILE *thread_info = NULL;
     time_t now = time(NULL);
@@ -88,11 +85,13 @@ void create_thread_info(channel_t *channel, const char *t_title,
     make_path(t_info_path, 0777);
     thread_info = fopen(t_info_path, "a+");
     strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-    fprintf(thread_info, thread_format, t_title, t_uuid_str, t_init, time_str);
+    fprintf(thread_info, thread_format, new_thread->user_uuid,
+        new_thread->thread_title, new_thread->thread_uuid,
+        new_thread->thread_init, new_thread->thread_init);
     fclose(thread_info);
 }
 
-void create_comment(thread_t *thread, const char *user_uuid,
+void add_comment(thread_t *thread, const char *user_uuid,
     const char* comment)
 {
     channel_t *channel = thread->p_channel;
@@ -107,7 +106,6 @@ void create_comment(thread_t *thread, const char *user_uuid,
         channel->channel_uuid, thread->thread_uuid);
     thread_file = fopen(t_file_path, "a+");
     strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
-    fprintf(thread_file, "%s -> %s: %s\r\n\r\n", time_str, user_uuid,
-        comment);
+    fprintf(thread_file, "%s: %s: %s\r\n\n", user_uuid, comment, time_str);
     fclose(thread_file);
 }

@@ -18,12 +18,10 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
 static void create(const char *uuid_str, connex_t *user_connex, command_t *cmd);
 
-static void create_helper(connex_t *user_connex, command_t *cmd,
-    const char *uuid_str);
+static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd);
 
 void create_cmd(int fd, command_t *cmd)
 {
-    char rsp[256] = {0};
     char uuid_str[UUID_STR_LEN] = {0};
     connex_t *user_connex = find_connex(fd);
     uuid_t uuid;
@@ -33,8 +31,6 @@ void create_cmd(int fd, command_t *cmd)
     uuid_generate(uuid);
     uuid_unparse_lower(uuid, uuid_str);
     create(uuid_str, user_connex, cmd);
-    sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_USE);
-    send_all(fd, rsp, strlen(rsp));
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
@@ -59,53 +55,31 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
         send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
-    return (0);
+    return (is_duplicate(fd, user_connex, cmd));
 }
 
-// static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd)
-// {
-//     channel_t *channel_context = NULL;
-//     team_t *team_context = NULL;
-//     thread_t *thread_context = NULL;
-
-//     if (user_connex->channel_cxt) {
-//         channel_context = (channel_t *)(user_connex->context);
-//         if (find_thread(channel_context->threads, cmd->args[0], NULL) != NULL) {
-//             send_error(ERR_THREADEXISTS, "Team already exists.\n", fd);
-//             return (1);
-//         }
-//     }
-//     if (user_connex->team_cxt) {
-//         team_context = (team_t *)(user_connex->context);
-//         if (find_channel(team_context->channels, cmd->args[0], NULL) != NULL) {
-//             send_error(ERR_CHANNELEXISTS, "Channel already exists.\n", fd);
-//             return (1);
-//         }
-//     }
-//     if (!user_connex->team_cxt && !user_connex->channel_cxt &&
-//         !user_connex->thread_cxt) {
-//         if (find_team(cmd->args[0], NULL) != NULL) {
-//             send_error(ERR_CHANNELEXISTS, "Channel already exists.\n", fd);
-//             return (1);
-//         }
-//         send_error(ERR_TEAMEXISTS, "Team already exists.\n", fd);
-//         return (1);
-//     }
-
-//     // if (cmd->num_args == 1 && !user_connex->thread_cxt) {
-//     //     send_error(ERR_NEEDMOREPARAMS, "Missing parameters.\n", fd);
-//     //     return (1);
-//     // }
-//     // if (user_connex->team_cxt) {
-
-//     // }
-//     // if (user_connex->channel_cxt) {
-
-//     // }
-//     // if (user_connex->thread_cxt) {
-
-//     // }
-// }
+static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd)
+{
+    if (user_connex->channel_cxt) {
+        channel_t * channel_context = (channel_t *)(user_connex->context);
+        if (find_thread(channel_context->threads, cmd->args[0], NULL) != NULL) {
+            send_error(ERR_THREADEXISTS, fd);
+            return (1);
+        }
+    } else if (user_connex->team_cxt) {
+        team_t *team_context = (team_t *)(user_connex->context);
+        if (find_channel(team_context->channels, cmd->args[0], NULL) != NULL) {
+            send_error(ERR_CHANNELEXISTS, fd);
+            return (1);
+        }
+    } else {
+        if (find_team(cmd->args[0], NULL) != NULL) {
+            send_error(ERR_TEAMEXISTS, fd);
+            return (1);
+        }
+    }
+    return (0);
+}
 
 static void create(const char *uuid_str, connex_t *user_connex,
     command_t *cmd)
@@ -115,40 +89,14 @@ static void create(const char *uuid_str, connex_t *user_connex,
 
     strftime(time_str, TIME_LEN, "%Y-%m-%d %H:%M:%S", localtime(&now));
     if (user_connex->thread_cxt) {
-        thread_t *thread_context = (thread_t *)(user_connex->context);
-        create_comment(thread_context, user_connex->user->user_uuid,
-            cmd->args[0]);
-        server_event_thread_new_message(thread_context->thread_uuid,
-            user_connex->user->user_uuid, cmd->args[0]);
-        create_comment_response(user_connex, cmd, time_str);
+        create_comment(user_connex, cmd);
     } else if (user_connex->channel_cxt) {
-        channel_t *channel_context = (channel_t *)(user_connex->context);
-        set_parent_chan(channel_context);
-        add_thread(cmd->args[0], uuid_str, cmd->args[1], time_str);
-        create_thread_file(user_connex, cmd->args[0], uuid_str, cmd->args[1]);
-        server_event_thread_created(channel_context->channel_uuid, uuid_str,
-            user_connex->user->user_uuid, cmd->args[1]);
-        create_thread_response(uuid_str, user_connex);
+        create_thread(user_connex, cmd, uuid_str);
     }
-    create_helper(user_connex, cmd, uuid_str);
-}
-
-static void create_helper(connex_t *user_connex, command_t *cmd,
-    const char *uuid_str)
-{
     if (user_connex->team_cxt && !user_connex->channel_cxt) {
-        team_t *team_context = (team_t *)(user_connex->context);
-        add_chann(team_context, cmd->args[0], uuid_str, cmd->args[1]);
-        create_channel_dir(team_context, cmd->args[0], uuid_str, cmd->args[1]);
-        server_event_channel_created(team_context->team_uuid, uuid_str,
-            cmd->args[0]);
-        create_channel_response(uuid_str, user_connex);
+        create_channel(user_connex, cmd, uuid_str);
     } else if (!user_connex->team_cxt && !user_connex->channel_cxt &&
         !user_connex->thread_cxt) {
-        add_team(cmd->args[0], uuid_str, cmd->args[1]);
-        create_team_dir(cmd->args[0], uuid_str, cmd->args[1]);
-        server_event_team_created(uuid_str, cmd->args[0],
-            user_connex->user->user_uuid);
-        create_team_response(uuid_str, user_connex);
+        create_team(user_connex, cmd, uuid_str);
     }
 }
