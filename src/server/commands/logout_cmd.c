@@ -27,6 +27,7 @@ void logout_cmd(int fd, command_t *cmd)
         user_connex->user->user_uuid);
     notify_connected(rsp, user_connex->user);
     delete_conn(fd);
+    close(fd);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
