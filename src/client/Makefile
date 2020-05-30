@@ -17,7 +17,9 @@ SRC		=	main.c \
 			lib_func_handle/loggedout.c \
 			lib_func_handle/notif_private_message.c \
 			lib_func_handle/rsp_user.c \
-			lib_func_handle/rsp_team_created.c
+			lib_func_handle/rsp_team_created.c \
+			lib_func_handle/notif_thread_message.c
+
 
 OBJ     	=       $(SRC:.c=.o)
 
