@@ -26,7 +26,7 @@ void user_cmd(int fd, command_t *cmd)
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\" "
         "status: \"%d\"\r\nEND_RSP\r\n", RSP_USER, found_user->user_name,
         found_user->user_uuid, status);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)

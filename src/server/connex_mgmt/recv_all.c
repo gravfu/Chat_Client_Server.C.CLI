@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2020
-** NWP_myftp_2019
+** NWP_myteams_2019
 ** File description:
 ** recv_all
 */

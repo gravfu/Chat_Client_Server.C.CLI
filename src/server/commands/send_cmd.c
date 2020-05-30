@@ -40,7 +40,7 @@ void send_cmd(int fd, command_t *cmd)
     server_event_private_message_sended(user_connex->user->user_uuid,
         cmd->args[0], cmd->args[1]);
     add_notification(rcvr, notif);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)

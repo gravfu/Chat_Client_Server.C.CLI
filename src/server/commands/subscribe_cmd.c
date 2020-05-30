@@ -36,7 +36,7 @@ void subscribe_cmd(int fd, command_t *cmd)
     sprintf(rsp, "START_RSP\r\n%d\r\nuseruuid: \"%s\" teamuuid: \"%s\"\r\n"
         "END_RSP\r\n", RSP_SUBSCRIBE, user_connex->user->user_uuid,
         team->team_uuid);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)

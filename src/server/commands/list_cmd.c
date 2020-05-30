@@ -69,17 +69,17 @@ static char *get_list(connex_t *user_connex)
 static void send_list_responses(connex_t *user_connex, char *str)
 {
     if (user_connex->thread_cxt) {
-        list_comments_response(user_connex->user, str);
+        list_comments_response(user_connex, str);
         return;
     }
     if (user_connex->channel_cxt) {
-        list_threads_response(user_connex->user, str);
+        list_threads_response(user_connex, str);
         return;
     }
     if (user_connex->team_cxt) {
-        list_channels_response(user_connex->user, str);
+        list_channels_response(user_connex, str);
         return;
     }
-    list_teams_response(user_connex->user, str);
+    list_teams_response(user_connex, str);
 }
 

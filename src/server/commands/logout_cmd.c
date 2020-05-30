@@ -25,9 +25,7 @@ void logout_cmd(int fd, command_t *cmd)
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
         "END_RSP\r\n", RSP_LOGOUT, user_connex->user->user_name,
         user_connex->user->user_uuid);
-    notify_connected(rsp, user_connex->user);
-    delete_conn(fd);
-    close(fd);
+    notify_connected(rsp, NULL);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)

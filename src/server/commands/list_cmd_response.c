@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void list_comments_response(user_t *user, const char *comments)
+void list_comments_response(connex_t *user_connex, const char *comments)
 {
     char *rsp = NULL;
     int len_str = (comments != NULL) ? strlen(comments) : 0;
@@ -22,11 +22,11 @@ void list_comments_response(user_t *user, const char *comments)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_LIST_COMMENT,
         comments);
-    add_notification(user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }
 
-void list_threads_response(user_t *user, const char *threads)
+void list_threads_response(connex_t *user_connex, const char *threads)
 {
     char *rsp = NULL;
     int len_str = (threads != NULL) ? strlen(threads) : 0;
@@ -36,11 +36,11 @@ void list_threads_response(user_t *user, const char *threads)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_LIST_THREAD,
         threads);
-    add_notification(user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }
 
-void list_channels_response(user_t *user, const char *channels)
+void list_channels_response(connex_t *user_connex, const char *channels)
 {
     char *rsp = NULL;
     int len_str = (channels != NULL) ? strlen(channels) : 0;
@@ -50,11 +50,11 @@ void list_channels_response(user_t *user, const char *channels)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_LIST_CHANNEL,
         channels);
-    add_notification(user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }
 
-void list_teams_response(user_t *user, const char *teams)
+void list_teams_response(connex_t *user_connex, const char *teams)
 {
     char *rsp = NULL;
     int len_str = (teams != NULL) ? strlen(teams) : 0;
@@ -64,6 +64,6 @@ void list_teams_response(user_t *user, const char *teams)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_LIST_TEAM,
         teams);
-    add_notification(user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }

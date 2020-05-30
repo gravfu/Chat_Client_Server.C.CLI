@@ -25,7 +25,7 @@ void create_comment_response(connex_t *user_connex, command_t *cmd,
         "useruuid: \"%s\" body: %s\r\nEND_RSP\r\n", NOTIF_THREADCREATE,
         thread->p_channel->p_team->team_uuid, thread->thread_uuid,
         user_connex->user->user_uuid, cmd->args[0]);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     notify_team(thread->p_channel->p_team, notif, user_connex->user);
 }
 
@@ -44,7 +44,7 @@ void create_thread_response(const char *uuid_str, connex_t *user_connex)
         "time: \"%s\" title: \"%s\" body: %s\r\nEND_RSP\r\n",
         NOTIF_THREADCREATE, uuid_str, user_connex->user->user_uuid,
         thread->timestamp, thread->thread_title, thread->thread_init);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     notify_team(channel->p_team, notif, user_connex->user);
 }
 
@@ -61,7 +61,7 @@ void create_channel_response(const char *uuid_str, connex_t *user_connex)
     sprintf(notif, "START_RSP\r\n%d\r\nchanneluuid: \"%s\" channelname: \"%s\""
         " channeldesc: \"%s\"\r\nEND_RSP\r\n", NOTIF_CHANCREATE, uuid_str,
         channel->channel_name, channel->channel_desc);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     notify_team(team, notif, user_connex->user);
 }
 
@@ -77,6 +77,6 @@ void create_team_response(const char *uuid_str, connex_t *user_connex)
     sprintf(notif, "START_RSP\r\n%d\r\nteamuuid: \"%s\" teamname: \"%s\" "
         "teamdesc: \"%s\"\r\nEND_RSP\r\n", NOTIF_TEAMCREATE, uuid_str,
         team->team_name, team->team_desc);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     notify_domain(notif, user_connex->user);
 }

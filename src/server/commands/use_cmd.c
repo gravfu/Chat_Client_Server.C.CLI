@@ -27,7 +27,7 @@ void use_cmd(int fd, command_t *cmd)
         return;
     change_context(user_connex, cmd);
     sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_USE);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
