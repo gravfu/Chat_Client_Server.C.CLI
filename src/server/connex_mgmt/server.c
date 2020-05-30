@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2020
-** NWP_myftp_2019
+** NWP_myteams_2019
 ** File description:
-** main
+** server
 */
 
 #include "my_teams_srv.h"
@@ -63,7 +63,7 @@ static void check_for_update(int connex_fd, int listen_fd, int *fd_max,
             FD_SET(client_fd, &master_write);
             add_connex(client_fd);
             *fd_max = (client_fd > *fd_max) ? client_fd : *fd_max;
-            send_all(client_fd, "Welcome to Epitech's TPC Server\n", 32);
+            send_data(client_fd, "Welcome to Epitech's TPC Server\n", 32);
         } else handle_event(connex_fd, fd_max, child_set);
     }
 }
@@ -82,7 +82,8 @@ static void handle_event(int fd, int *fd_max, fd_set *child_set[2])
         delete_conn(fd);
         *fd_max = (fd == *fd_max) ? (*fd_max - 1) : *fd_max;
     } else {
+        set_write_fds(child_set[1]);
         respond(fd, &cmd_in);
-        send_responses(child_set[1]);
+        send_responses();
     }
 }

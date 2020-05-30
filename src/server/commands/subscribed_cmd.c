@@ -36,7 +36,7 @@ void subscribed_cmd(int fd, command_t *cmd)
     rsp = calloc(rsp_len + 1, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_SUBSCRIBED, str);
     if (str) free(str);
-    add_notification(user_connex->user, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }
 

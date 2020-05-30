@@ -220,13 +220,13 @@ void launch_server(char *port);
 
 void list_cmd(int fd, command_t *cmd);
 
-void list_channels_response(user_t *user, const char *channels);
+void list_comments_response(connex_t *user_connex, const char *comments);
 
-void list_comments_response(user_t *user, const char *comments);
+void list_threads_response(connex_t *user_connex, const char *threads);
 
-void list_teams_response(user_t *user, const char *teams);
+void list_channels_response(connex_t *user_connex, const char *channels);
 
-void list_threads_response(user_t *user, const char *threads);
+void list_teams_response(connex_t *user_connex, const char *teams);
 
 void listen_for_conn(int listen_fd);
 
@@ -268,15 +268,21 @@ void recv_all(int client_fd, command_t **cmd_list);
 
 void respond(int fd, command_t *cmd);
 
-void send_all(int client_fd, const char *buffer, int len);
+void send_data(int client_fd, const char *buffer, int len);
 
 void send_cmd(int fd, command_t *cmd);
 
+void send_direct(int client_fd, const char *message);
+
 void send_error(int error_num, int client_fd);
 
-void send_responses(fd_set *write_fds);
+void send_responses();
+
+int send_to_user(const connex_t *connections, const notification_t *notif);
 
 void set_parent_chan(channel_t *p_chann);
+
+void set_write_fds(fd_set *w_fds);
 
 void subscribe_cmd(int fd, command_t *cmd);
 

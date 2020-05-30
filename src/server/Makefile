@@ -46,7 +46,8 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./connex_mgmt/notify_many.c				\
 			./connex_mgmt/recv_all.c				\
 			./connex_mgmt/respond.c					\
-			./connex_mgmt/send_all.c				\
+			./connex_mgmt/send_utils.c				\
+			./connex_mgmt/send_utils_1.c			\
 			./connex_mgmt/server.c					\
 			./main.c
 
