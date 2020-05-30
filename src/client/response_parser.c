@@ -31,7 +31,7 @@ int rsp_parsing(int code, char *buffer)
 {
     switch (code) {
         case RSP_USER:
-        return client_print_users_handle(buffer);
+        return client_print_user_handle(buffer);
         case RSP_SUBSCRIBE:
         return client_print_subscribed_handle(buffer);
         case RSP_UNSUBSCRIBE:
