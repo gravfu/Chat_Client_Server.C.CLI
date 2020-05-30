@@ -37,6 +37,7 @@ int client_print_subscribed_handle(char *buffer);
 int client_print_unsubscribed_handle(char *buffer);
 int client_print_reply_created_handle(char *buffer);
 int client_event_channel_created_handle(char *buffer);
+int client_event_thread_created_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */

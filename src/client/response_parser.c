@@ -54,6 +54,8 @@ int notif_parsing(int code, char *buffer)
         return client_event_thread_message_received_handle(buffer);
         case NOTIF_CHANCREATE:
         return client_event_channel_created_handle(buffer);
+        case NOTIF_THREADCREATE:
+        return client_event_thread_created_handle(buffer);
         default:
         return 1;
     }
