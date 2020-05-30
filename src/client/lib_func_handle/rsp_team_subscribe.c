@@ -12,7 +12,7 @@ int client_print_subscribed_handle(char *buffer)
     char *useruuid = var_parser(buffer, "useruuid:");
     char *teamuuid = var_parser(buffer, "teamuuid:");
 
-    if (client_print_unsubscribed(useruuid, teamuuid) == -1) {
+    if (client_print_subscribed(useruuid, teamuuid) == -1) {
         printf("Error in client_event_team_created\n");
     }
     if (useruuid)

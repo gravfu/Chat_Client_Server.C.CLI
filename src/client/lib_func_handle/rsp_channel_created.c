@@ -9,22 +9,18 @@
 
 int client_print_channel_created_handle(char *buffer)
 {
-    char *threaduuid = var_parser(buffer, "channeluuid:");
-    char *useruuid = var_parser(buffer, "channelname:");
-    char *time = var_parser(buffer, "channeldesc:");
+    char *channeluuid = var_parser(buffer, "channeluuid:");
+    char *channelname = var_parser(buffer, "channelname:");
+    char *channeldesc = var_parser(buffer, "channeldesc:");
 
-    if (client_print_channel_created(threaduuid, useruuid, timea, title, body) == -1) {
+    if (client_print_channel_created(channeluuid, channelname, channeldesc) == -1) {
         printf("Error in client_event_team_created\n");
     }
-    if (threaduuid)
-        free(threaduuid);
-    if (useruuid)
-        free(useruuid);
-    if (time)
-        free(time);
-    if (title)
-        free(title);
-    if (body)
-        free(body);
+    if (channeluuid)
+        free(channeluuid);
+    if (channelname)
+        free(channelname);
+    if (channeldesc)
+        free(channeldesc);
     return 0;
 }

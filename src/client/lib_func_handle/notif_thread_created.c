@@ -25,7 +25,6 @@ int client_event_thread_created_handle(char *buffer)
     if (threaduuid) free(threaduuid);
     if (useruuid) free(useruuid);
     if (time) free(time);
-    if (timestamp) free(timestamp);
     if (title) free(title);
     if (body) free(body);
 
