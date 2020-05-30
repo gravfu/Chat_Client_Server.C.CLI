@@ -6,6 +6,7 @@
 */
 
 #include "parser_func.h"
+#include <time.h>
 
 char *var_parser(char *buffer, char *to_searsh)
 {
@@ -57,4 +58,11 @@ void remove_char(char *s, int c)
         if (s[i] != c)
             s[j++] = s[i];
     s[j] = '\0';
+}
+
+time_t string_to_time_t(char *buffer)
+{
+    struct tm tm;
+    strptime(buffer, "%Y-%m-%d %H:%M:%S", &tm);
+    return mktime(&tm); 
 }

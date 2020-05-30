@@ -33,6 +33,12 @@ void resp_parsing(char *buffer, user_info *info)
         client_print_users_handle(buffer);
     else if (code == RSP_CREATE_TEAM)
         client_event_team_created_handle(buffer);
+    else if (code == RSP_SUBSCRIBE)
+        client_print_subscribed_handle(buffer);
+    else if (code == RSP_UNSUBSCRIBE)
+        client_print_unsubscribed_handle(buffer);
+    else if (code == RSP_CREATE_COMMENT)
+        client_print_reply_created_handle(buffer);
     else
         printf("%s", buffer);
 }
