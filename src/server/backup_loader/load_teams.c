@@ -14,7 +14,7 @@
 static void alloc_team(team_t **new_team, const char *t_name,
     const char *t_uuid, const char *t_desc);
 
-void load_teams()
+void load_teams(void)
 {
     char t_name[MAX_NAME_LENGTH + 1] = {0};
     char t_uuid[UUID_STR_LEN] = {0};
@@ -87,7 +87,7 @@ team_t *find_team(const char *team_name, const char *team_uuid)
     return (NULL);
 }
 
-const team_t *get_teams()
+const team_t *get_teams(void)
 {
     return (team_list);
 }

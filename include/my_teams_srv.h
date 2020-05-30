@@ -192,19 +192,19 @@ user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid);
 
 char *get_comments_str(connex_t *user_connex);
 
-const connex_t *get_connex();
+const connex_t *get_connex(void);
 
 char *get_channels_str(connex_t *user_connex);
 
-const notification_t *get_notifications();
+const notification_t *get_notifications(void);
 
 int get_sock(char *port);
 
-const user_t *get_users();
+const user_t *get_users(void);
 
-const team_t *get_teams();
+const team_t *get_teams(void);
 
-char *get_teams_str();
+char *get_teams_str(void);
 
 char *get_thread_body(const thread_t *thread);
 
@@ -234,13 +234,13 @@ void load_chats(user_t *user, const char *user_dir);
 
 void load_subs(team_t *team, const char *team_dir);
 
-void load_teams();
+void load_teams(void);
 
 void load_team_subs(user_t *user, const char *user_dir);
 
 void load_threads(channel_t *channel, const char *channel_dir);
 
-void load_users();
+void load_users(void);
 
 void login_cmd(int fd, command_t *cmd);
 

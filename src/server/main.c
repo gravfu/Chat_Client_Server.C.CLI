@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** NWP_myftp_2019
 ** File description:
-** Main function for my_ftp project
+** Main function for my_teams project
 */
 
 #include "my_teams_srv.h"

@@ -24,7 +24,7 @@ void add_to_cmds(command_t **cmd_list, command_t *new_cmd)
     }
 }
 
-command_t *alloc_cmd()
+command_t *alloc_cmd(void)
 {
     command_t *new_cmd = NULL;
 

@@ -68,7 +68,7 @@ void del_notification(const notification_t *to_delete)
     free(temp);
 }
 
-const notification_t *get_notifications()
+const notification_t *get_notifications(void)
 {
     return (notif_list);
 }

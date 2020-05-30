@@ -13,7 +13,7 @@
 
 static void get_threads_str_helper(char *buff, char *thread_body);
 
-char *get_teams_str()
+char *get_teams_str(void)
 {
     char buff[128] = {0};
     char *teams_str = NULL;

@@ -76,7 +76,7 @@ connex_t *find_connex(int fd)
     return (NULL);
 }
 
-const connex_t *get_connex()
+const connex_t *get_connex(void)
 {
     return (connect_list);
 }

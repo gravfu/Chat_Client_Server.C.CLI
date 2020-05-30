@@ -15,7 +15,7 @@
 static void alloc_user(user_t **new_user, const char *u_name,
     const char *u_uuid);
 
-void load_users()
+void load_users(void)
 {
     char u_name[MAX_NAME_LENGTH + 1] = {0};
     char u_uuid[UUID_STR_LEN] = {0};
@@ -85,7 +85,7 @@ user_t *find_user(const char *user_name, const char *user_uuid)
     return (NULL);
 }
 
-const user_t *get_users()
+const user_t *get_users(void)
 {
     return (user_list);
 }
