@@ -110,24 +110,25 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
 static void create(const char *uuid_str, connex_t *user_connex,
     command_t *cmd)
 {
+    char time_str[TIME_LEN] = {0};
+    time_t now = time(NULL);
+
+    strftime(time_str, TIME_LEN, "%Y-%m-%d %H:%M:%S", localtime(&now));
     if (user_connex->thread_cxt) {
         thread_t *thread_context = (thread_t *)(user_connex->context);
         create_comment(thread_context, user_connex->user->user_uuid,
             cmd->args[0]);
         server_event_thread_new_message(thread_context->thread_uuid,
             user_connex->user->user_uuid, cmd->args[0]);
-        return;
+        create_comment_response(user_connex, cmd, time_str);
     } else if (user_connex->channel_cxt) {
         channel_t *channel_context = (channel_t *)(user_connex->context);
-        char time_str[TIME_LEN];
-        time_t now = time(NULL);
-        strftime(time_str, TIME_LEN, "%Y-%m-%d %H:%M:%S", localtime(&now));
         set_parent_chan(channel_context);
         add_thread(cmd->args[0], uuid_str, cmd->args[1], time_str);
         create_thread_file(user_connex, cmd->args[0], uuid_str, cmd->args[1]);
         server_event_thread_created(channel_context->channel_uuid, uuid_str,
             user_connex->user->user_uuid, cmd->args[1]);
-        return;
+        create_thread_response(uuid_str, user_connex);
     }
     create_helper(user_connex, cmd, uuid_str);
 }
@@ -135,20 +136,19 @@ static void create(const char *uuid_str, connex_t *user_connex,
 static void create_helper(connex_t *user_connex, command_t *cmd,
     const char *uuid_str)
 {
-    if (user_connex->team_cxt) {
+    if (user_connex->team_cxt && !user_connex->channel_cxt) {
         team_t *team_context = (team_t *)(user_connex->context);
         add_chann(team_context, cmd->args[0], uuid_str, cmd->args[1]);
         create_channel_dir(team_context, cmd->args[0], uuid_str, cmd->args[1]);
         server_event_channel_created(team_context->team_uuid, uuid_str,
             cmd->args[0]);
-        return;
-    }
-    if (!user_connex->team_cxt && !user_connex->channel_cxt &&
+        create_channel_response(uuid_str, user_connex);
+    } else if (!user_connex->team_cxt && !user_connex->channel_cxt &&
         !user_connex->thread_cxt) {
         add_team(cmd->args[0], uuid_str, cmd->args[1]);
         create_team_dir(cmd->args[0], uuid_str, cmd->args[1]);
         server_event_team_created(uuid_str, cmd->args[0],
             user_connex->user->user_uuid);
-        return;
+        create_team_response(uuid_str, user_connex);
     }
 }

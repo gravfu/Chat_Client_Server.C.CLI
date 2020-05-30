@@ -35,7 +35,7 @@ void login_cmd(int fd, command_t *cmd)
     server_event_user_logged_in(user->user_uuid);
     sprintf(rsp, "START_RSP\r\n%d\r\nusername: \"%s\" useruuid: \"%s\"\r\n"
         "END_RSP\r\n", RSP_LOGIN, user->user_name, user->user_uuid);
-    notify_connected(rsp);
+    notify_connected(rsp, NULL);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)

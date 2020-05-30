@@ -1,2 +1,5 @@
 backup/
 .gitignore
+test_rcv.sh
+test.sh
+.vscode

@@ -134,13 +134,22 @@ void channel_switch(connex_t *user_connex, command_t *cmd);
 void create_channel_dir(team_t *team, const char *c_name,
     const char *c_uuid_str, const char *c_desc);
 
+void create_channel_response(const char *uuid_str, connex_t *user_connex);
+
 void create_cmd(int fd, command_t *cmd);
 
 void create_comment(thread_t *thread, const char *user_name,
     const char* comment);
 
+void create_comment_response(connex_t *user_connex, command_t *cmd,
+    const char *timestamp);
+
+void create_thread_response(const char *uuid_str, connex_t *user_connex);
+
 void create_team_dir(const char *t_name, const char *t_uuid_str,
     const char *t_desc);
+
+void create_team_response(const char *uuid_str, connex_t *user_connex);
 
 void create_thread_file(connex_t *user_connex, const char *t_title,
     const char *t_uuid_str, const char *t_init);
@@ -229,11 +238,11 @@ void new_recv(int client_fd, command_t *cmd);
 
 void no_switch(connex_t *user_connex);
 
-void notify_connected(const char *message);
+void notify_connected(const char *message, user_t *ignore);
 
-void notify_domain(const char *message);
+void notify_domain(const char *message, user_t *ignore);
 
-void notify_team(team_t *team, const char *message);
+void notify_team(team_t *team, const char *message, user_t *ignore);
 
 void recv_all(int client_fd, command_t **cmd_list);
 

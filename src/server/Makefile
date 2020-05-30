@@ -13,6 +13,7 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./backup_loader/load_teams.c			\
 			./backup_loader/load_threads.c			\
 			./backup_loader/load_users.c			\
+			./commands/create_cmd_response.c		\
 			./commands/create_cmd.c					\
 			./commands/create_resource.c			\
 			./commands/get_comments.c				\

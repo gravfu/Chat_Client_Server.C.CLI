@@ -31,10 +31,10 @@ void subscribed_cmd(int fd, command_t *cmd)
         str = get_sub_teams(user_connex);
     else
         str = get_sub_users(cmd);
-    len_str = (str != NULL) ? strlen(str) : len_str;
-    rsp_len = strlen("START_RSP\r\n") + len_str + strlen("END_RSP\r\n");
-    rsp = calloc(rsp_len, sizeof(char));
-    sprintf(rsp, "START_RSP\r\n%d\r\n%s\r\nEND_RSP\r\n", RSP_SUBSCRIBED, str);
+    len_str = (str != NULL) ? strlen(str) : 0;
+    rsp_len = strlen("START_RSP\r\n000\r\n") + len_str + strlen("END_RSP\r\n");
+    rsp = calloc(rsp_len + 1, sizeof(char));
+    sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_SUBSCRIBED, str);
     if (str) free(str);
     add_notification(user_connex->user, rsp);
     free(rsp);
@@ -70,12 +70,12 @@ char *get_sub_teams(connex_t *user_connex)
     unsigned int length = 0;
 
     for (int i = 0; team_subs != NULL; i++) {
-        sprintf(buff, "\tteam name: \"%s\" team uuid: \"%s\"\r\n",
+        sprintf(buff, "team name: \"%s\" team uuid: \"%s\"\r\n",
             team_subs->team_name, team_subs->team_uuid);
         length += strlen(buff);
-        all_sub_teams = realloc(all_sub_teams, length * sizeof(char));
+        all_sub_teams = realloc(all_sub_teams, (length + 1) * sizeof(char));
         if (i == 0)
-            memset(all_sub_teams, 0, length * sizeof(char));
+            memset(all_sub_teams, 0, (length + 1) * sizeof(char));
         strcat(all_sub_teams, buff);
         memset(buff, 0, 128);
         team_subs = team_subs->next;
@@ -95,9 +95,9 @@ char *get_sub_users(command_t *cmd)
         sprintf(buff, "user name: \"%s\" user uuid: \"%s\"\r\n",
             user_subs->user_name, user_subs->user_uuid);
         length += strlen(buff);
-        all_sub_users = realloc(all_sub_users, length * sizeof(char));
+        all_sub_users = realloc(all_sub_users, (length + 1) * sizeof(char));
         if (i == 0)
-            memset(all_sub_users, 0, length * sizeof(char));
+            memset(all_sub_users, 0, (length + 1) * sizeof(char));
         strcat(all_sub_users, buff);
         memset(buff, 0, 128);
         user_subs = user_subs->next;
