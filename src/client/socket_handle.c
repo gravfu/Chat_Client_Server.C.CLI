@@ -41,7 +41,6 @@ int stdin_data_detected(char *buffer, int listenfd_socket)
                 buffer[i] = '\n';
         }
         remove_char(buffer, '"');
-        printf("BUFFER: %s\n", buffer);
         dprintf(listenfd_socket, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
     } else if (read_var == 0) {
         return 1;
@@ -73,14 +72,15 @@ int loop_init(int const listenfd)
 {
     user_info info;
     int tmp = 0;
+    char buffer[4097];
     fd_set rfds_stdin;
     fd_set rfds_set;
-    char buffer[4097];
 
+    info.is_set = 0;
+    info.listenfd = listenfd;
     FD_ZERO(&rfds_stdin);
     FD_SET(0, &rfds_stdin);
     FD_SET(listenfd, &rfds_stdin);
-    info.listenfd = listenfd;
     read_output(listenfd, &info);
     while (tmp != 4) {
         rfds_set = rfds_stdin;

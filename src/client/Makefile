@@ -13,7 +13,10 @@ SRC		=	main.c \
 			response_parser.c \
 			socket_handle.c \
 			parser_func.c \
-			lib_func_handle.c
+			lib_func_handle/loggedin.c \
+			lib_func_handle/loggedout.c \
+			lib_func_handle/notif_private_message.c \
+			lib_func_handle/rsp_user.c
 
 OBJ     	=       $(SRC:.c=.o)
 
