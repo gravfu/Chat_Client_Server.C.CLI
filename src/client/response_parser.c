@@ -31,6 +31,8 @@ void resp_parsing(char *buffer, user_info *info)
         client_event_private_message_received_handle(buffer);
     else if (code == RSP_USER)
         client_print_users_handle(buffer);
+    else if (code == RSP_CREATE_TEAM)
+        client_event_team_created_handle(buffer);
     else
         printf("%s", buffer);
 }

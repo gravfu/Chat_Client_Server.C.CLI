@@ -31,6 +31,7 @@ int client_event_loggedin_handle(char *buffer, struct user_info_t *info);
 int client_event_loggedout_handle(char *buffer, struct user_info_t *info);
 int client_event_private_message_received_handle(char *buffer);
 int client_print_users_handle(char *buffer);
+int client_event_team_created_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */
