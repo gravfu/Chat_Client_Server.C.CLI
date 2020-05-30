@@ -7,9 +7,9 @@
 
 #include "socket_handle.h"
 
-int client_error_already_exist_handle(void)
+int client_error_unauthorized_handle(void)
 {
-    if (client_error_already_exist() == -1) {
+    if (client_error_unauthorized() == -1) {
         printf("Error in client_event_loggedin\n");
     }
     return 0;

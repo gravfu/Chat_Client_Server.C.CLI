@@ -25,7 +25,11 @@ SRC		=	main.c \
 			lib_func_handle/rsp_team_unsubscribe.c \
 			lib_func_handle/rsp_reply_comment.c \
 			lib_func_handle/rsp_thread_created.c \
-			lib_func_handle/rsp_channel_created.c
+			lib_func_handle/rsp_channel_created.c \
+			lib_func_handle/err_client_exist.c \
+			lib_func_handle/rsp_team_created.c \
+			lib_func_handle/err_client_unautorized.c \
+			lib_func_handle/err_unknown_user.c
 
 OBJ     	=       $(SRC:.c=.o)
 

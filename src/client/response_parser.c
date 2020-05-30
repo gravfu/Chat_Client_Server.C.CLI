@@ -22,9 +22,24 @@ int get_code(char *buffer)
 
 int err_parsing(int code, char *buffer)
 {
-    (void) code;
-    (void) buffer;
-    return 1;
+    switch (code) {
+        case ERR_TEAMEXISTS:
+        return client_error_already_exist_handle();
+        case ERR_THREADEXISTS:
+        return client_error_already_exist_handle();
+        case ERR_CHANNELEXISTS:
+        return client_error_already_exist_handle();
+        case ERR_NOTCONNECTED:
+        return client_error_unauthorized_handle();
+        case ERR_NOTSUBBED:
+        return client_error_unauthorized_handle();
+        case ERR_ALREADYCONNECTED:
+        return client_error_unauthorized_handle();
+        case ERR_NOSUCHUSER:
+        return client_error_unknown_user_handle(buffer);
+        default:
+        return 1;
+    }
 }
 
 int rsp_parsing(int code, char *buffer)
@@ -40,6 +55,10 @@ int rsp_parsing(int code, char *buffer)
         return client_print_reply_created_handle(buffer);
         case RSP_CREATE_THREAD:
         return client_print_thread_created_handle(buffer);
+        case RSP_CREATE_CHANNNEL:
+        return client_print_channel_created_handle(buffer);
+        case RSP_CREATE_TEAM:
+        return client_print_team_created_handle(buffer);
         default:
         return 1;
     }
