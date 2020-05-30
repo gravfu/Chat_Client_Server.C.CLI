@@ -22,7 +22,6 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
 static void send_message(connex_t *user_connex, command_t *cmd);
 
-
 void send_cmd(int fd, command_t *cmd)
 {
     connex_t *user_connex = find_connex(fd);

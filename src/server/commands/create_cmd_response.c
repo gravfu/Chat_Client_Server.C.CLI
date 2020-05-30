@@ -72,10 +72,10 @@ void create_team_response(const char *uuid_str, connex_t *user_connex)
     team_t *team = find_team(NULL, uuid_str);
 
     sprintf(rsp, "START_RSP\r\n%d\r\nteamuuid: \"%s\" teamname: \"%s\" "
-        "teamdesc: \"%s\"\r\nEND_RSP\r\n",RSP_CREATE_TEAM, uuid_str,
+        "teamdesc: \"%s\"\r\nEND_RSP\r\n", RSP_CREATE_TEAM, uuid_str,
         team->team_name, team->team_desc);
     sprintf(notif, "START_RSP\r\n%d\r\nteamuuid: \"%s\" teamname: \"%s\" "
-        "teamdesc: \"%s\"\r\nEND_RSP\r\n",NOTIF_TEAMCREATE, uuid_str,
+        "teamdesc: \"%s\"\r\nEND_RSP\r\n", NOTIF_TEAMCREATE, uuid_str,
         team->team_name, team->team_desc);
     add_notification(user_connex->user, rsp);
     notify_domain(notif, user_connex->user);

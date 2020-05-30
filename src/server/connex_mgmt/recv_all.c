@@ -13,7 +13,8 @@
 #include <string.h>
 #include <unistd.h>
 
-static void add_new_arg(unsigned int *buff_loc, const char *buff, command_t *cmd);
+static void add_new_arg(unsigned int *buff_loc, const char *buff,
+    command_t *cmd);
 
 static int find_next(int buff_loc, const char *buff, int limit);
 
@@ -46,7 +47,8 @@ void new_recv(int client_fd, command_t *cmd)
     }
 }
 
-static void add_new_arg(unsigned int *buff_loc, const char *buff, command_t *cmd)
+static void add_new_arg(unsigned int *buff_loc, const char *buff,
+    command_t *cmd)
 {
     cmd->num_args++;
     cmd->args = realloc(cmd->args, (cmd->num_args + 1) * sizeof(char *));

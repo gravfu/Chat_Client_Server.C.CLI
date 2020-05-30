@@ -92,7 +92,7 @@ void create_thread_info(channel_t *channel, thread_t *new_thread)
 }
 
 void add_comment(thread_t *thread, const char *user_uuid,
-    const char* comment)
+    const char *comment)
 {
     channel_t *channel = thread->p_channel;
     char t_file_path[4096] = {0};
