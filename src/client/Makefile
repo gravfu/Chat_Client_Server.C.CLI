@@ -29,7 +29,10 @@ SRC		=	main.c \
 			lib_func_handle/err_client_exist.c \
 			lib_func_handle/rsp_team_created.c \
 			lib_func_handle/err_client_unautorized.c \
-			lib_func_handle/err_unknown_user.c
+			lib_func_handle/err_unknown_user.c \
+			lib_func_handle/err_unknown_channel.c \
+			lib_func_handle/err_unknown_team.c \
+			lib_func_handle/err_unknown_thread.c
 
 OBJ     	=       $(SRC:.c=.o)
 

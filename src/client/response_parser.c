@@ -37,6 +37,12 @@ int err_parsing(int code, char *buffer)
         return client_error_unauthorized_handle();
         case ERR_NOSUCHUSER:
         return client_error_unknown_user_handle(buffer);
+        case ERR_NOSUCHCHANNEL:
+        return client_error_unknown_channel_handle(buffer);
+        case ERR_NOSUCHTEAM:
+        return client_error_unknown_team_handle(buffer);
+        case ERR_NOSUCHTHREAD:
+        return client_error_unknown_thread_handle(buffer);
         default:
         return 1;
     }

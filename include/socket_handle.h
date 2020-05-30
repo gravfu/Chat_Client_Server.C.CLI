@@ -46,6 +46,9 @@ int client_print_team_created_handle(char *buffer);
 int client_error_already_exist_handle(void);
 int client_error_unauthorized_handle(void);
 int client_error_unknown_user_handle(char *buffer);
+int client_error_unknown_thread_handle(char *buffer);
+int client_error_unknown_channel_handle(char *buffer);
+int client_error_unknown_team_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */
