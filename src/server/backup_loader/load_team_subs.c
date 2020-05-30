@@ -20,7 +20,8 @@ void load_team_subs(user_t *user, const char *user_dir)
     char t_name[MAX_NAME_LENGTH + 1] = {0};
     char t_uuid[UUID_STR_LEN] = {0};
     char t_desc[MAX_DESCRIPTION_LENGTH + 1] = {0};
-    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" desc: \"%[^\"]\"\n";
+    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" "
+        "desc: \"%[^\"]\"\n";
     FILE *sub_info = NULL;
 
     if (!user || !user_dir) return;
@@ -71,7 +72,8 @@ static void alloc_team_sub(team_t **new_team_sub, const char *t_name,
     (*new_team_sub)->next = NULL;
 }
 
-team_t *find_team_sub(team_t *sub_list, const char *t_name, const char *t_uuid)
+team_t *find_team_sub(team_t *sub_list, const char *t_name,
+    const char *t_uuid)
 {
     while (sub_list != NULL) {
         if (t_name && strcmp(t_name, sub_list->team_name) == 0) {

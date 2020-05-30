@@ -21,8 +21,8 @@ static void add_loaded_thread(channel_t *p_channel);
 void load_threads(channel_t *channel, const char *channel_dir)
 {
     char t_info_path[4096] = {0};
-    const char *format = "u_uuid: \"%[^\"]\" title: \"%[^\"]\" uuid: \"%[^\"]\""
-        " init: \"%[^\"]\" time: \"%[^\"]\"\n";
+    const char *format = "u_uuid: \"%[^\"]\" title: \"%[^\"]\" "
+        "uuid: \"%[^\"]\" init: \"%[^\"]\" time: \"%[^\"]\"\n";
     FILE *thread_info = NULL;
 
     if (!channel || !channel_dir) return;

@@ -46,7 +46,8 @@ void create_thread(connex_t *user_connex, command_t *cmd, const char *uuid_str)
     create_thread_response(uuid_str, user_connex);
 }
 
-void create_channel(connex_t *user_connex, command_t *cmd, const char *uuid_str)
+void create_channel(connex_t *user_connex, command_t *cmd,
+    const char *uuid_str)
 {
     team_t *team_context = (team_t *)(user_connex->context);
 

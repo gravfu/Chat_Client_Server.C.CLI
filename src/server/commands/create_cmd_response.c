@@ -58,8 +58,8 @@ void create_channel_response(const char *uuid_str, connex_t *user_connex)
     sprintf(rsp, "START_RSP\r\n%d\r\nchanneluuid: \"%s\" channelname: \"%s\" "
         "channeldesc: \"%s\"\r\nEND_RSP\r\n", RSP_CREATE_CHANNNEL, uuid_str,
         channel->channel_name, channel->channel_desc);
-    sprintf(notif, "START_RSP\r\n%d\r\nchanneluuid: \"%s\" channelname: \"%s\" "
-        "channeldesc: \"%s\"\r\nEND_RSP\r\n", NOTIF_CHANCREATE, uuid_str,
+    sprintf(notif, "START_RSP\r\n%d\r\nchanneluuid: \"%s\" channelname: \"%s\""
+        " channeldesc: \"%s\"\r\nEND_RSP\r\n", NOTIF_CHANCREATE, uuid_str,
         channel->channel_name, channel->channel_desc);
     add_notification(user_connex->user, rsp);
     notify_team(team, notif, user_connex->user);

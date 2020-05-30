@@ -158,7 +158,8 @@ void create_team_dir(const char *t_name, const char *t_uuid_str,
 
 void create_team_response(const char *uuid_str, connex_t *user_connex);
 
-void create_thread(connex_t *user_connex, command_t *cmd, const char *uuid_str);
+void create_thread(connex_t *user_connex, command_t *cmd,
+    const char *uuid_str);
 
 void create_thread_file(connex_t *user_connex, thread_t *new_thread);
 
@@ -188,7 +189,8 @@ thread_t *find_thread(thread_t *thread_list, const char *thread_title,
 
 user_t *find_user(const char *user_name, const char *user_uuid);
 
-user_t *find_sub(user_t *sub_list, const char *sub_name, const char *sub_uuid);
+user_t *find_sub(user_t *sub_list, const char *sub_name,
+    const char *sub_uuid);
 
 char *get_comments_str(connex_t *user_connex);
 

@@ -19,7 +19,8 @@ void load_teams(void)
     char t_name[MAX_NAME_LENGTH + 1] = {0};
     char t_uuid[UUID_STR_LEN] = {0};
     char t_desc[MAX_DESCRIPTION_LENGTH + 1] = {0};
-    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" desc: \"%[^\"]\"\n";
+    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" "
+        "desc: \"%[^\"]\"\n";
     FILE *team_info = NULL;
 
     team_info = fopen("./backup/teams/team_info", "r");

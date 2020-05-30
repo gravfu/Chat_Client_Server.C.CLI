@@ -16,7 +16,8 @@
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static void create(const char *uuid_str, connex_t *user_connex, command_t *cmd);
+static void create(const char *uuid_str, connex_t *user_connex,
+    command_t *cmd);
 
 static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd);
 
@@ -62,7 +63,8 @@ static int is_duplicate(int fd, connex_t *user_connex, command_t *cmd)
 {
     if (user_connex->channel_cxt) {
         channel_t * channel_context = (channel_t *)(user_connex->context);
-        if (find_thread(channel_context->threads, cmd->args[0], NULL) != NULL) {
+        if (find_thread(channel_context->threads, cmd->args[0], NULL)
+            != NULL) {
             send_error(ERR_THREADEXISTS, fd);
             return (1);
         }

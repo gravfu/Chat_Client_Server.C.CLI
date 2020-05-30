@@ -21,7 +21,8 @@ void load_channels(team_t *team, const char *team_dir)
     char c_name[MAX_NAME_LENGTH + 1] = {0};
     char c_uuid[UUID_STR_LEN] = {0};
     char c_desc[MAX_DESCRIPTION_LENGTH + 1] = {0};
-    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" desc: \"%[^\"]\"\n";
+    const char *format = "name: \"%[^\"]\" uuid: \"%[^\"]\" "
+        "desc: \"%[^\"]\"\n";
     FILE *channel_info = NULL;
 
     if (!team || !team_dir) return;

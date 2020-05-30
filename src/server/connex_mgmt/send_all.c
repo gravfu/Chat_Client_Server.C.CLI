@@ -48,8 +48,10 @@ int send_to_user(const connex_t *connections, const notification_t *notif,
     while (connections != NULL) {
         if (connections->user && connections->logged_in &&
             FD_ISSET(connections->sock_fd, write_fds) &&
-            strcmp(connections->user->user_name, notif->rcvr->user_name) == 0 &&
-            strcmp(connections->user->user_uuid, notif->rcvr->user_uuid) == 0) {
+            strcmp(connections->user->user_name, notif->rcvr->user_name)
+            == 0 &&
+            strcmp(connections->user->user_uuid, notif->rcvr->user_uuid)
+            == 0) {
             send_all(connections->sock_fd, notif->msg, notif->msg_len);
             found = 1;
         }
