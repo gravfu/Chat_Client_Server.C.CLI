@@ -31,8 +31,9 @@ void unsubscribe_cmd(int fd, command_t *cmd)
     drop_team_sub(user_connex->user, team->team_name, team->team_uuid);
     server_event_user_leave_a_team(team->team_uuid,
         user_connex->user->user_uuid);
-    sprintf(rsp, "START_RSP\r\n%d\r\nuseruuid: %s teamuuid: %s\r\nEND_RSP\r\n",
-        RSP_UNSUBSCRIBE, user_connex->user->user_uuid, team->team_uuid);
+    sprintf(rsp, "START_RSP\r\n%d\r\nuseruuid: \"%s\" teamuuid: \"%s\"\r\n"
+        "END_RSP\r\n", RSP_UNSUBSCRIBE, user_connex->user->user_uuid,
+        team->team_uuid);
     send_all(fd, rsp, strlen(rsp));
 }
 

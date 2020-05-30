@@ -19,7 +19,6 @@ char *get_thread_body(const thread_t *thread)
     sprintf(thread_path, "./backup/teams/team_%s/channels/chan_%s/threads"
         "/thread_%s", thread->p_channel->p_team->team_uuid,
         thread->p_channel->channel_uuid, thread->thread_uuid);
-    printf("%s", thread_path);
     thread_file = fopen(thread_path, "r");
     fseek(thread_file, 0, SEEK_END);
     fsize = ftell(thread_file);

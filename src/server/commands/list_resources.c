@@ -68,7 +68,7 @@ char *get_threads_str(connex_t *user_connex)
         thread_body = get_thread_body(threads);
         buff = malloc((strlen(thread_body) + 256) * sizeof(char));
         sprintf(buff, "threaduuid: \"%s\" useruuid: \"%s\" time: \"%s\" "
-            "threadtitle: \"%s\" body: \"%s\"\r\n", threads->thread_uuid,
+            "threadtitle: \"%s\" body: %s\r\n", threads->thread_uuid,
             threads->user_uuid, threads->timestamp, threads->thread_title,
             thread_body);
         length += strlen(buff);

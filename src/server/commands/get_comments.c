@@ -46,7 +46,7 @@ static char *read_comments(FILE *thread_file, const thread_t *thread)
 
     while (fscanf(thread_file, format, u_uuid, cmt_body, time_str) == 3) {
         sprintf(buff, "threaduuid: \"%s\" useruuid: \"%s\" time: \"%s\" "
-            "body: \"%s\"\r\n", thread->thread_uuid, u_uuid, time_str,
+            "body: %s\r\n", thread->thread_uuid, u_uuid, time_str,
             cmt_body);
         length += strlen(buff);
         comments_str = realloc(comments_str, (length + 1) * sizeof(char));

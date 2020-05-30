@@ -35,8 +35,9 @@ void send_cmd(int fd, command_t *cmd)
     rcvr = find_user(NULL, cmd->args[0]);
     send_message(user_connex, cmd);
     sprintf(rsp, "START_RSP\r\n%d\r\nEND_RSP\r\n", RSP_SEND);
-    sprintf(notif, "START_RSP\r\n%d\r\nuseruuid: %s body: %s\r\nEND_RSP\r\n",
-        NOTIF_MSGRCV, user_connex->user->user_uuid, cmd->args[1]);
+    sprintf(notif, "START_RSP\r\n%d\r\nuseruuid: \"%s\" body: %s\r\n"
+        "END_RSP\r\n", NOTIF_MSGRCV, user_connex->user->user_uuid,
+        cmd->args[1]);
     server_event_private_message_sended(user_connex->user->user_uuid,
         cmd->args[0], cmd->args[1]);
     add_notification(rcvr, notif);
