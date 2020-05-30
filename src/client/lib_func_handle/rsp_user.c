@@ -14,7 +14,7 @@ int client_print_user_handle(char *buffer)
     char *status = var_parser(buffer, "status:");
 
     if (client_print_user(uuid, user, atoi(status)) == -1) {
-        printf("Error in client_print_users\n");
+        printf("Error in client_print_user\n");
     }
     if (user != NULL)
         free(user);
