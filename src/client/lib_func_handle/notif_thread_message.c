@@ -14,7 +14,8 @@ int client_event_thread_message_received_handle(char *buffer)
     char *useruuid = var_parser(buffer, "useruuid:");
     char *message = var_parser_body(buffer, "body:");
 
-    if (client_event_thread_message_received(teamuuid, threaduuid, useruuid, message) == -1) {
+    if (client_event_thread_message_received(teamuuid, threaduuid, useruuid,
+        message) == -1) {
         printf("Error in client_event_thread_message_received\n");
     }
 
