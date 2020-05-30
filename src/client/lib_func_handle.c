@@ -31,3 +31,13 @@ int client_event_loggedout_handle(user_info *info)
     }
     return 0;
 }
+
+int client_event_private_message_received_handle(char *buffer)
+{
+    char *uuid = var_parser(buffer, "useruuid:");
+    char *body = var_parser_body(buffer, "body:");
+    if (client_event_private_message_received(uuid, body) == 1)
+        printf("Error in client_event_private_message\n");
+    printf("Message received from %s: %s\n", uuid, body);
+    return 0;
+}

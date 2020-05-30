@@ -6,13 +6,30 @@
 */
 
 #include "socket_handle.h"
+#include "return_codes.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int get_code(char *buffer)
+{
+    char tmp2[5];
+    char *tmp1 = strstr(buffer, "\n");
+    strncpy(tmp2, tmp1 + 1, 3);
+    tmp2[3] = '\0';
+    return atoi(tmp2);
+}
 
 void resp_parsing(char *buffer, user_info *info)
 {
-    if (strstr(buffer, "503") != NULL)
+    //printf("BUFFER: %s\n", buffer);
+    int code = get_code(buffer);
+    if (code == RSP_LOGIN)
         client_event_loggedin_handle(buffer, info);
-    else if (strstr(buffer, "504") != NULL)
+    else if (code == RSP_LOGOUT)
         client_event_loggedout_handle(info);
+    else if (code == NOTIF_MSGRCV)
+        client_event_private_message_received_handle(buffer);
     else
         printf("%s", buffer);
 }

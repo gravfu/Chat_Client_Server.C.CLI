@@ -28,6 +28,7 @@ typedef struct user_info_t {
 int socket_handle(int port, char const *path);
 int client_event_loggedin_handle(char *buffer, struct user_info_t *info);
 int client_event_loggedout_handle(struct user_info_t *info);
+int client_event_private_message_received_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */

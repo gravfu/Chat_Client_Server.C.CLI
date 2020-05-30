@@ -13,6 +13,7 @@
 #include <stdlib.h>
 
 char *var_parser(char *buffer, char *to_searsh);
-void removeChar(char *s, int c);
+char *var_parser_body(char *buffer, char *to_searsh);
+void remove_char(char *s, int c);
 
 #endif /* !PARSER_FUNC_H_ */
