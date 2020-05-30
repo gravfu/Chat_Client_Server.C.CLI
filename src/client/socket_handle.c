@@ -27,7 +27,7 @@ int read_output(int listenfd, user_info *info)
     return 0;
 }
 
-int stdin_data_detected(char *buffer, int listenfd_socket)
+int stdin_data_detected(char *buffer, user_info *info)
 {
     int read_var;
     int tmp = 0;
@@ -41,24 +41,25 @@ int stdin_data_detected(char *buffer, int listenfd_socket)
                 buffer[i] = '\n';
         }
         remove_char(buffer, '"');
-        dprintf(listenfd_socket, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
+        if (FD_ISSET(info->listenfd, &info->write_set))
+            dprintf(info->listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
     } else if (read_var == 0) {
         return 1;
     }
     return 0;
 }
 
-void loop_content(fd_set *rfds_set, user_info *info, int *tmp, char *buffer)
+void loop_content(user_info *info, int *tmp, char *buffer)
 {
-    int reader_sel = select(info->listenfd + 1, rfds_set, NULL, NULL, NULL);
+    int reader_sel = select(info->listenfd + 1, &info->rfds_set, &info->write_set, NULL, NULL);
 
     if (reader_sel < 0)
         printf("select failed\n ");
     if (reader_sel > 0) {
-        if (FD_ISSET(info->listenfd, rfds_set))
+        if (FD_ISSET(info->listenfd, &info->rfds_set))
             read_output(info->listenfd, info);
-        if (FD_ISSET(0, rfds_set) && *tmp == 0)
-            *tmp = stdin_data_detected(buffer, info->listenfd);
+        if (FD_ISSET(0, &info->rfds_set) && *tmp == 0)
+            *tmp = stdin_data_detected(buffer, info);
         if (*tmp == 2)
             *tmp = 4;
         if (*tmp == 1) {
@@ -74,17 +75,20 @@ int loop_init(int const listenfd)
     int tmp = 0;
     char buffer[4097];
     fd_set rfds_stdin;
-    fd_set rfds_set;
+    fd_set write_fd;
 
     info.is_set = 0;
     info.listenfd = listenfd;
     FD_ZERO(&rfds_stdin);
+    FD_ZERO(&write_fd);
     FD_SET(0, &rfds_stdin);
     FD_SET(listenfd, &rfds_stdin);
+    FD_SET(listenfd, &write_fd);
     read_output(listenfd, &info);
     while (tmp != 4) {
-        rfds_set = rfds_stdin;
-        loop_content(&rfds_set, &info, &tmp, buffer);
+        info.rfds_set = rfds_stdin;
+        info.write_set = write_fd;
+        loop_content(&info, &tmp, buffer);
     }
     return 0;
 }

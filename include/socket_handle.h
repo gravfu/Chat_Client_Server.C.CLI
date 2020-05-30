@@ -24,6 +24,8 @@ typedef struct user_info_t {
     char uuid[50];
     int is_set;
     int listenfd;
+    fd_set rfds_set;
+    fd_set write_set;
 } user_info;
 
 int socket_handle(int port, char const *path);
