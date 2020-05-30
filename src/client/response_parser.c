@@ -38,6 +38,8 @@ int rsp_parsing(int code, char *buffer)
         return client_print_unsubscribed_handle(buffer);
         case RSP_CREATE_COMMENT:
         return client_print_reply_created_handle(buffer);
+        case RSP_CREATE_THREAD:
+        return client_print_thread_created_handle(buffer);
         default:
         return 1;
     }
