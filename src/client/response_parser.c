@@ -22,10 +22,21 @@ int get_code(char *buffer)
 
 int err_parsing(int code, char *buffer)
 {
-    (void) buffer;
     switch (code) {
-        case RSP_USER:
+        case ERR_TEAMEXISTS:
         return client_error_already_exist_handle();
+        case ERR_THREADEXISTS:
+        return client_error_already_exist_handle();
+        case ERR_CHANNELEXISTS:
+        return client_error_already_exist_handle();
+        case ERR_NOTCONNECTED:
+        return client_error_unauthorized_handle();
+        case ERR_NOTSUBBED:
+        return client_error_unauthorized_handle();
+        case ERR_ALREADYCONNECTED:
+        return client_error_unauthorized_handle();
+        case ERR_NOSUCHUSER:
+        return client_error_unknown_user_handle(buffer);
         default:
         return 1;
     }
