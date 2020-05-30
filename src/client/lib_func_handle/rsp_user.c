@@ -7,13 +7,13 @@
 
 #include "socket_handle.h"
 
-int client_print_users_handle(char *buffer)
+int client_print_user_handle(char *buffer)
 {
     char *user = var_parser(buffer, "username:");
     char *uuid = var_parser(buffer, "useruuid:");
     char *status = var_parser(buffer, "status:");
 
-    if (client_print_users(uuid, user, atoi(status)) == -1) {
+    if (client_print_user(uuid, user, atoi(status)) == -1) {
         printf("Error in client_print_users\n");
     }
     if (user != NULL)

@@ -32,7 +32,7 @@ int socket_handle(int port, char const *path);
 int client_event_loggedin_handle(char *buffer, struct user_info_t *info);
 int client_event_loggedout_handle(char *buffer, struct user_info_t *info);
 int client_event_private_message_received_handle(char *buffer);
-int client_print_users_handle(char *buffer);
+int client_print_user_handle(char *buffer);
 int client_event_team_created_handle(char *buffer);
 int client_event_thread_message_received_handle(char *buffer);
 int client_print_subscribed_handle(char *buffer);
