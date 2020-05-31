@@ -28,7 +28,7 @@ void unsubscribe_cmd(int fd, command_t *cmd)
     del_sub(&(team->subs), user_connex->user->user_name,
         user_connex->user->user_uuid);
     drop_sub(team, user_connex->user->user_name, user_connex->user->user_uuid);
-    del_team_sub(user_connex->user->team_subs, team->team_name,
+    del_team_sub(&user_connex->user->team_subs, team->team_name,
         team->team_uuid);
     drop_team_sub(user_connex->user, team->team_name, team->team_uuid);
     server_event_user_leave_a_team(team->team_uuid,
