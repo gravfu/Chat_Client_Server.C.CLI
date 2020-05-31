@@ -44,8 +44,8 @@ char *var_parser_body(char *buffer, char *to_searsh)
     for (i = 0; tmp != gui2 - 1; i++, tmp++);
     new = malloc(sizeof(char) * (i + 5));
     memset(new, 0, i + 4);
-    strncpy(new, gui1 + 1, gui2 - gui1 - 1);
-    new[gui2 - gui1] = '\0';
+    strncpy(new, gui1 + 1, gui2 - gui1 - 2);
+    new[gui2 - gui1 - 1] = '\0';
     return new;
 }
 
