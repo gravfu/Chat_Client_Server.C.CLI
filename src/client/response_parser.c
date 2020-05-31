@@ -67,6 +67,8 @@ int rsp_parsing(int code, char *buffer)
         return client_print_team_created_handle(buffer);
         case RSP_USERS:
         return client_print_users_handle(buffer);
+        case RSP_INFO_USER:
+        return client_print_users_handle(buffer);
         case RSP_LIST_TEAM:
         return client_print_teams_handle(buffer);
         case RSP_LIST_CHANNEL:
@@ -75,6 +77,8 @@ int rsp_parsing(int code, char *buffer)
         return client_print_team_handle(buffer);
         case RSP_LIST_THREAD:
         return client_channel_print_threads_handle(buffer);
+        case RSP_MESSAGES:
+        return client_private_message_print_messages_handle(buffer);
         default:
         return 1;
     }
