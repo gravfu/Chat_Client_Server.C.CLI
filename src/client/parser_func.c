@@ -63,6 +63,9 @@ void remove_char(char *s, int c)
 time_t string_to_time_t(char *buffer)
 {
     struct tm tm;
+    if (!buffer) {
+        return 0;
+    }
     strptime(buffer, "%Y-%m-%d %H:%M:%S", &tm);
-    return mktime(&tm); 
+    return mktime(&tm);
 }
