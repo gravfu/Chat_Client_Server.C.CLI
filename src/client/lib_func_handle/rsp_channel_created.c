@@ -13,7 +13,8 @@ int client_print_channel_created_handle(char *buffer)
     char *channelname = var_parser(buffer, "channelname:");
     char *channeldesc = var_parser(buffer, "channeldesc:");
 
-    if (client_print_channel_created(channeluuid, channelname, channeldesc) == -1) {
+    if (client_print_channel_created(channeluuid, channelname,
+        channeldesc) == -1) {
         printf("Error in client_event_team_created\n");
     }
     if (channeluuid)

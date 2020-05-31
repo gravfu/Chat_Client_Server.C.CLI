@@ -16,7 +16,8 @@ int client_print_thread_handle(char *buffer)
     char *threadname = var_parser(buffer, "threadname:");
     char *body = var_parser_body(buffer, "body:");
 
-    if (client_print_thread(threaduuid, useruuid, timea, threadname, body) == -1) {
+    if (client_print_thread(threaduuid, useruuid, timea,
+        threadname, body) == -1) {
         printf("Error in client_print_thread\n");
     }
     if (threaduuid) free(threaduuid);
