@@ -16,7 +16,7 @@ int client_private_message_print_messages_handle(char *buffer)
     char *body = var_parser_body(tmp, "body:");
 
     tmp = strstr(tmp, "\n") + 1;
-    while(useruuid != NULL) {
+    while (useruuid != NULL) {
         if (client_private_message_print_messages(useruuid, timea, body) == -1)
             printf("Error in client_print_users\n");
         if (useruuid != NULL) free(useruuid);

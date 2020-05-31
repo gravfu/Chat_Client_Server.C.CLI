@@ -25,7 +25,7 @@ int client_channel_print_threads_handle(char *buffer)
     char *body = var_parser_body(tmp, "body:");
     time_t time = string_to_time_t(var_parser(tmp, "time:"));
     tmp = strstr(tmp, "\n") + 1;
-    while(t_uuid != NULL) {
+    while (t_uuid != NULL) {
         if (client_channel_print_threads(t_uuid, u_uuid, time, title,
             body) == -1) printf("Error in client_channel_print_threads\n");
         client_channel_print_threads_handle_free(t_uuid, u_uuid, title, body);
