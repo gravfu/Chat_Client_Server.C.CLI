@@ -15,22 +15,11 @@ int client_event_thread_message_received_handle(char *buffer)
     char *message = var_parser_body(buffer, "body:");
 
     if (client_event_thread_message_received(teamuuid, threaduuid, useruuid,
-        message) == -1) {
+        message) == -1)
         printf("Error in client_event_thread_message_received\n");
-    }
-
-    if (teamuuid != NULL) {
-        free(teamuuid);
-    }
-    if (threaduuid != NULL) {
-        free(threaduuid);
-    }
-    if (useruuid != NULL) {
-        free(useruuid);
-    }
-    if (message != NULL) {
-        free(message);
-    }
-
+    if (teamuuid != NULL) free(teamuuid);
+    if (threaduuid != NULL) free(threaduuid);
+    if (useruuid != NULL) free(useruuid);
+    if (message != NULL) free(message);
     return 0;
 }
