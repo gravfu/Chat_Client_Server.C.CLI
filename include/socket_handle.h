@@ -57,6 +57,7 @@ int client_print_channel_handle(char *buffer);
 int client_print_thread_handle(char *buffer);
 int client_channel_print_threads_handle(char *buffer);
 int client_private_message_print_messages_handle(char *buffer);
+int client_thread_print_replies_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */

@@ -77,6 +77,8 @@ int rsp_parsing(int code, char *buffer)
         return client_print_team_handle(buffer);
         case RSP_LIST_THREAD:
         return client_channel_print_threads_handle(buffer);
+        case RSP_LIST_COMMENT:
+        return client_thread_print_replies_handle(buffer);
         case RSP_MESSAGES:
         return client_private_message_print_messages_handle(buffer);
         default:
