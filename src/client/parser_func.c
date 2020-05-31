@@ -11,7 +11,8 @@
 char *var_parser(char *buffer, char *to_searsh)
 {
     char *variable = strstr(buffer, to_searsh);
-    char *gui1, *gui2, *new;
+    char *gui1, *gui2, *new, *tmp;
+    int i;
     if (variable == NULL)
         return NULL;
     gui1 = strstr(variable, "\"");
@@ -20,8 +21,10 @@ char *var_parser(char *buffer, char *to_searsh)
     gui2 = strstr(gui1 + 1, "\"");
     if (gui2 == NULL || gui1 == gui2)
         return NULL;
-    new = malloc(sizeof(char) * 257);
-    memset(new, 0, 257);
+    tmp = gui1;
+    for (i = 0; tmp != gui2 - 1; i++, tmp++);
+    new = malloc(sizeof(char) * (i + 5));
+    memset(new, 0, i + 4);
     strncpy(new, gui1 + 1, gui2 - gui1 - 1);
     new[gui2 - gui1] = '\0';
     return new;
