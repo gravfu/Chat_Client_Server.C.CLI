@@ -50,10 +50,10 @@ static char *get_info(connex_t *user_connex)
         return (list);
     }
     if (user_connex->team_cxt) {
-        list = get_channels_str(user_connex);
+        info = get_channels_str(user_connex);
         return (list);
     }
-    info = get_users_str();
+    info = get_user_str();
     return (info);
 }
 

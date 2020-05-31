@@ -8,26 +8,51 @@
 #include "my_teams_srv.h"
 #include <stddef.h>
 
-char *get_channels_str(connex_t *user_connex)
+char *get_user_str(user_t *user)
 {
     char buff[128] = {0};
-    char *channels_str = NULL;
-    const channel_t *channels = ((team_t *)(user_connex->context))->channels;
-    unsigned int length = 0;
+    char *user_str = NULL;
+    int length = 0;
+    int status = is_connected(user);
 
-    for (int i = 0; channels != NULL; i++) {
-        sprintf(buff, "channelname: \"%s\" channeluuid: \"%s\" "
-            "channeldesc: \"%s\"\r\n", channels->channel_name,
-            channels->channel_uuid, channels->channel_desc);
-        length += strlen(buff);
-        channels_str = realloc(channels_str, (length + 1) * sizeof(char));
-        if (i == 0)
-            memset(channels_str, 0, (length + 1) * sizeof(char));
-        strcat(channels_str, buff);
-        memset(buff, 0, 128);
-        channels = channels->next;
-    }
-    return (channels_str);
+    sprintf(buff, "username: \"%s\" useruuid: \"%s\" status: \"%d\"\r\n",
+        user->user_name, user->user_uuid, status);
+    length = strlen(buff);
+    user_str = realloc(user_str, (length + 1) * sizeof(char));
+    memset(user_str, 0, (length + 1) * sizeof(char));
+    strcat(user_str, buff);
+    return (user_str);
+}
+
+char *get_team_str(team_t *team)
+{
+    char buff[128] = {0};
+    char *team_str = NULL;
+    int length = 0;
+
+    sprintf(buff, "teamname: \"%s\" teamuuid: \"%s\" teamdesc: \"%s\"\r\n",
+        team->team_name, team->team_uuid, team->team_desc);
+    length = strlen(buff);
+    team_str = realloc(team_str, (length + 1) * sizeof(char));
+    memset(team_str, 0, (length + 1) * sizeof(char));
+    strcat(team_str, buff);
+    return (team_str);
+}
+
+char *get_channel_str(channel_t *channel)
+{
+    char buff[128] = {0};
+    char *channel_str = NULL;
+    int length = 0;
+
+    sprintf(buff, "channelname: \"%s\" channeluuid: \"%s\" channeldesc: \"%s\""
+        "\r\n", channel->channel_name, channel->channel_uuid,
+        channel->channel_desc);
+    length = strlen(buff);
+    channel_str = realloc(channel_str, (length + 1) * sizeof(char));
+    memset(channel_str, 0, (length + 1) * sizeof(char));
+    strcat(channel_str, buff);
+    return (channel_str);
 }
 
 char *get_threads_str(connex_t *user_connex)

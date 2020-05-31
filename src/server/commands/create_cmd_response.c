@@ -21,10 +21,10 @@ void create_comment_response(connex_t *user_connex, command_t *cmd,
         "time: \"%s\" body: %s\r\nEND_RSP\r\n", RSP_CREATE_COMMENT,
         thread->thread_uuid, user_connex->user->user_uuid, timestamp,
         cmd->args[0]);
-    sprintf(notif, "START_RSP\r\n%d\r\nteamuuid: \"%s\" threaduuid: \"%s\" "
-        "useruuid: \"%s\" body: %s\r\nEND_RSP\r\n", NOTIF_THREADCREATE,
-        thread->p_channel->p_team->team_uuid, thread->thread_uuid,
-        user_connex->user->user_uuid, cmd->args[0]);
+    sprintf(notif, "START_RSP\r\n%d\r\nthreaduuid: \"%s\" useruuid: \"%s\" "
+        "time: \"%s\" threadtitle: \"%s\" body: %s\r\nEND_RSP\r\n",
+        NOTIF_THREADCREATE, thread->thread_uuid, user_connex->user->user_uuid,
+        timestamp, cmd->args[0]);
     send_direct(user_connex->sock_fd, rsp);
     notify_team(thread->p_channel->p_team, notif, user_connex->user);
 }
