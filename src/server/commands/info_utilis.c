@@ -55,6 +55,9 @@ char *get_channel_str(channel_t *channel)
     return (channel_str);
 }
 
+
+
+
 char *get_threads_str(connex_t *user_connex)
 {
     char *buff = NULL;
@@ -77,5 +80,35 @@ char *get_threads_str(connex_t *user_connex)
         get_threads_str_helper(buff, thread_body);
         threads = threads->next;
     }
+    return (threads_str);
+}
+
+//! Handler called when the user ask for a thread in particular (/info CLI command)
+/*!
+	\param thread_id a character pointer corresponding to the universally unique id assigned to the thread.
+	\param user_id a character pointer corresponding to the universally unique id assigned to the user who created the thread.
+	\param thread_timestamp an unsigned integer corresponding to the timestamp of the thread's creation.
+	\param thread_title a character pointer corresponding to the thread title.
+	\param thread_body a character pointer corresponding to the thread body.
+	\return On success, 1 is returned. On error, -1 is returned and errno is set appropriately
+*/
+
+char *get_thread_str(thread_t *thread)
+{
+    char *buff = NULL;
+    char *channel_str = NULL;
+    int length = 0;
+    char *thread_body = get_thread_body(thread);
+
+    buff = malloc((strlen(thread_body) + 256) * sizeof(char));
+    sprintf(buff, "threaduuid: \"%s\" useruuid: \"%s\" time: \"%s\""
+        " threadtitle: \"%s\" body: %s\r\n", thread->thread_uuid,
+        thread->user_uuid, thread->timestamp, thread->thread_title,
+        thread_body);
+    length = strlen(buff);
+    channel_str = realloc(channel_str, (length + 1) * sizeof(char));
+    memset(channel_str, 0, (length + 1) * sizeof(char));
+    strcat(channel_str, buff);
+    return (channel_str);
     return (threads_str);
 }

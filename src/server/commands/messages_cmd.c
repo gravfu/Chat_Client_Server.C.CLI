@@ -36,7 +36,7 @@ void messages_cmd(int fd, command_t *cmd)
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n", RSP_MESSAGES, chat_str);
     if (chat_str) free(chat_str);
-    send_direct(user_connex->channel_cxt, rsp);
+    send_direct(user_connex->sock_fd, rsp);
     free(rsp);
 }
 
