@@ -217,6 +217,8 @@ char *get_thread_body(const thread_t *thread);
 
 char *get_threads_str(connex_t *user_connex);
 
+char *get_users_str(void);
+
 void help_cmd(int fd, command_t *cmd);
 
 int is_connected(const user_t *user);

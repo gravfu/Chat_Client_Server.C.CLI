@@ -14,7 +14,7 @@
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static char *get_users_str(void);
+char *get_users_str(void);
 
 void users_cmd(int fd, command_t *cmd)
 {
@@ -50,7 +50,7 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
     return (0);
 }
 
-static char *get_users_str(void)
+char *get_users_str(void)
 {
     char buff[128] = {0};
     char *users_str = NULL;

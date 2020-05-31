@@ -4,3 +4,4 @@ test_rcv.sh
 test.sh
 .vscode
 test*
+vgcore*

@@ -48,8 +48,7 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
         send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
-    if (user_connex->logged_in &&
-        strcmp(user_connex->user->user_name, cmd->args[0]) == 0) {
+    if (user_connex->logged_in) {
         send_error(ERR_ALREADYCONNECTED, fd);
         return (1);
     }
