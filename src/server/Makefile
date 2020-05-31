@@ -21,6 +21,9 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./commands/get_comments.c				\
 			./commands/get_thread_body.c			\
 			./commands/help_cmd.c					\
+			./commands/info_cmd_response.c			\
+			./commands/info_cmd.c					\
+			./commands/info_utils.c					\
 			./commands/list_cmd_response.c			\
 			./commands/list_cmd.c					\
 			./commands/list_resources.c				\

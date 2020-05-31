@@ -201,6 +201,8 @@ char *get_comments_str(connex_t *user_connex);
 
 const connex_t *get_connex(void);
 
+char *get_channel_str(channel_t *channel);
+
 char *get_channels_str(connex_t *user_connex);
 
 const notification_t *get_notifications(void);
@@ -211,15 +213,31 @@ const user_t *get_users(void);
 
 const team_t *get_teams(void);
 
+char *get_team_str(team_t *team);
+
 char *get_teams_str(void);
 
 char *get_thread_body(const thread_t *thread);
 
+char *get_thread_str(thread_t *thread);
+
 char *get_threads_str(connex_t *user_connex);
+
+char *get_user_str(user_t *user);
 
 char *get_users_str(void);
 
 void help_cmd(int fd, command_t *cmd);
+
+void info_cmd(int fd, command_t *cmd);
+
+void info_thread_response(connex_t *user_connex, const char *thread);
+
+void info_channel_response(connex_t *user_connex, const char *channel);
+
+void info_team_response(connex_t *user_connex, const char *team);
+
+void info_user_response(connex_t *user_connex, const char *user);
 
 int is_connected(const user_t *user);
 
@@ -327,7 +345,7 @@ static void (* const CMD_FUNCS[14])(int fd, command_t *cmd) = {
     &use_cmd,
     &create_cmd,
     &list_cmd,
-    NULL
+    &info_cmd
 };
 
 #endif /* !MY_TEAMS_SRV_H_ */

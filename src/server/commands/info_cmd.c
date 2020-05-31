@@ -9,19 +9,24 @@
 #include "return_codes.h"
 #include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
+static char *get_info(connex_t *user_connex);
+
+static void send_info_responses(connex_t *user_connex, char *str);
+
 void info_cmd(int fd, command_t *cmd)
 {
-    char *rsp = NULL;
     char *str = NULL;
     connex_t *user_connex = find_connex(fd);
-    unsigned int len_str = 0;
-    unsigned int rsp_len = 0;
 
     if (contains_errors(fd, user_connex, cmd))
         return;
+    str = get_info(user_connex);
+    send_info_responses(user_connex, str);
+    if (str) free(str);
 }
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
@@ -42,34 +47,34 @@ static char *get_info(connex_t *user_connex)
     char *info = NULL;
 
     if (user_connex->thread_cxt) {
-        list = get_comments_str(user_connex);
-        return (list);
+        info = get_thread_str((thread_t *)user_connex->context);
+        return (info);
     }
     if (user_connex->channel_cxt) {
-        list = get_threads_str(user_connex);
-        return (list);
+        info = get_channel_str((channel_t *)user_connex->context);
+        return (info);
     }
     if (user_connex->team_cxt) {
-        info = get_channels_str(user_connex);
-        return (list);
+        info = get_team_str((team_t *)user_connex->context);
+        return (info);
     }
-    info = get_user_str();
+    info = get_user_str(user_connex->user);
     return (info);
 }
 
-static void send_list_responses(connex_t *user_connex, char *str)
+static void send_info_responses(connex_t *user_connex, char *str)
 {
     if (user_connex->thread_cxt) {
-        list_comments_response(user_connex, str);
+        info_thread_response(user_connex, str);
         return;
     }
     if (user_connex->channel_cxt) {
-        list_threads_response(user_connex, str);
+        info_channel_response(user_connex, str);
         return;
     }
     if (user_connex->team_cxt) {
-        list_channels_response(user_connex, str);
+        info_user_response(user_connex, str);
         return;
     }
-    list_teams_response(user_connex, str);
+    info_user_response(user_connex, str);
 }

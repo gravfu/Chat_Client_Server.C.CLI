@@ -20,11 +20,8 @@ static void send_list_responses(connex_t *user_connex, char *str);
 
 void list_cmd(int fd, command_t *cmd)
 {
-    char *rsp = NULL;
     char *str = NULL;
     connex_t *user_connex = find_connex(fd);
-    unsigned int len_str = 0;
-    unsigned int rsp_len = 0;
 
     if (contains_errors(fd, user_connex, cmd))
         return;
