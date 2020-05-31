@@ -53,6 +53,8 @@ int client_print_users_handle(char *buffer);
 int client_print_teams_handle(char *buffer);
 int client_team_print_channels_handle(char *buffer);
 int client_print_team_handle(char *buffer);
+int client_print_channel_handle(char *buffer);
+int client_print_thread_handle(char *buffer);
 void resp_parsing(char *buffer, user_info *info);
 
 #endif /* !SOCKET_HANDLE_H_ */
