@@ -71,8 +71,8 @@ char *get_threads_str(connex_t *user_connex)
         length += strlen(buff);
         threads_str = realloc(threads_str, (length + 1) * sizeof(char));
         if (i == 0) memset(threads_str, 0, (length + 1) * sizeof(char));
-        memset(buff, 0, 1024 * sizeof(char));
         strcat(threads_str, buff);
+        memset(buff, 0, 1024 * sizeof(char));
         threads = threads->next;
     }
     return (threads_str);
