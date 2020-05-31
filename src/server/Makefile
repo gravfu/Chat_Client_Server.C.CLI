@@ -42,6 +42,7 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./connex_mgmt/accept_conn.c				\
 			./connex_mgmt/command_manip.c			\
 			./connex_mgmt/connect_list_manips.c		\
+			./connex_mgmt/generate_response.c		\
 			./connex_mgmt/get_sock.c				\
 			./connex_mgmt/is_connected.c			\
 			./connex_mgmt/listen_for_conn.c			\

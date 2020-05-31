@@ -291,7 +291,7 @@ void notify_team(team_t *team, const char *message, user_t *ignore);
 
 void recv_all(int client_fd, command_t **cmd_list);
 
-void respond(int fd, command_t *cmd);
+void generate_response(int fd, command_t *cmd);
 
 void send_data(int client_fd, const char *buffer, int len);
 
@@ -301,7 +301,7 @@ void send_direct(int client_fd, const char *message);
 
 void send_error(int error_num, int client_fd);
 
-void send_responses();
+void send_responses(void);
 
 int send_to_user(const connex_t *connections, const notification_t *notif);
 

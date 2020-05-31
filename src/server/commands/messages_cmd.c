@@ -92,7 +92,7 @@ static char *read_messages(FILE *chat_file)
     int length = 0;
 
     while (fscanf(chat_file, format, u_uuid, msg_body, time_str) == 3) {
-        sprintf(buff, "useruuid: \"%s\" time: \"%s\" body: %s\r\n",
+        sprintf(buff, "useruuid: \"%s\" time: \"%s\" body: (%s)\r\n",
             u_uuid, time_str, msg_body);
         length += strlen(buff);
         chat_str = realloc(chat_str, (length + 1) * sizeof(char));

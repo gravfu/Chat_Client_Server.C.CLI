@@ -7,7 +7,7 @@
 
 #include "my_teams_srv.h"
 
-void send_responses()
+void send_responses(void)
 {
     const connex_t *connections = get_connex();
     const notification_t *notifs = get_notifications();

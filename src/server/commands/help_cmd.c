@@ -19,8 +19,8 @@ void help_cmd(int fd, command_t *cmd)
     connex_t *user_connex = find_connex(fd);
     unsigned int rsp_len = 0;
 
-    rsp_len = strlen("START_RSP\r\n") + strlen("000: List of TPC Commands:\r\n")
-        + strlen(HELP_MSG) + strlen("END_RSP\r\n");
+    rsp_len = strlen("START_RSP\r\n000\r\n") + strlen(HELP_MSG) +
+        strlen("END_RSP\r\n");
     rsp = calloc(rsp_len, sizeof(char));
     sprintf(rsp, "START_RSP\r\n%d\r\n%sEND_RSP\r\n",
         RSP_HELP, HELP_MSG);

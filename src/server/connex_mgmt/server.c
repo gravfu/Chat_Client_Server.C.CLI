@@ -83,7 +83,7 @@ static void handle_event(int fd, int *fd_max, fd_set *child_set[2])
         *fd_max = (fd == *fd_max) ? (*fd_max - 1) : *fd_max;
     } else {
         set_write_fds(child_set[1]);
-        respond(fd, &cmd_in);
+        generate_response(fd, &cmd_in);
         send_responses();
     }
 }
