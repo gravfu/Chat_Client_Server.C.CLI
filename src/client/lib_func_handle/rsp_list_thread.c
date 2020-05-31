@@ -19,7 +19,7 @@ int client_channel_print_threads_handle(char *buffer)
     tmp = strstr(tmp, "\n") + 1;
     while(t_uuid != NULL) {
         if (client_channel_print_threads(t_uuid, u_uuid, time, title, body) == -1)
-            printf("Error in client_team_print_channels\n");
+            printf("Error in client_channel_print_threads\n");
         if (t_uuid != NULL) free(t_uuid);
         if (u_uuid != NULL) free(u_uuid);
         if (title != NULL) free(title);
