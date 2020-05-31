@@ -17,6 +17,7 @@ SRC	=		./backup_loader/drop_sub.c				\
 			./commands/create_cmd.c					\
 			./commands/create_resource.c			\
 			./commands/create_utils.c				\
+			./commands/exist_check.c				\
 			./commands/get_comments.c				\
 			./commands/get_thread_body.c			\
 			./commands/help_cmd.c					\

@@ -56,11 +56,8 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
         send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
-    user = find_user(NULL, cmd->args[0]);
-    if (!user) {
-        send_error(ERR_NOSUCHUSER, fd);
+    if (!user_exist(user_connex, cmd))
         return (1);
-    }
     return (0);
 }
 

@@ -61,10 +61,8 @@ static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd)
     team_t *team = find_team(NULL, cmd->args[0]);
     user_t *sub = NULL;
 
-    if (!team) {
-        send_error(ERR_NOSUCHTEAM, fd);
+    if (!team_exist(user_connex, cmd))
         return (1);
-    }
     sub = find_sub(team->subs, NULL, user_connex->user->user_uuid);
     if (!sub) {
         send_error(ERR_NOTSUBBED, fd);

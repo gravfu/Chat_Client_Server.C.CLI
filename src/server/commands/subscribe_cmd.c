@@ -61,10 +61,8 @@ static int err_check_helper(int fd, connex_t *user_connex, command_t *cmd)
     team_t *team = find_team(NULL, cmd->args[0]);
     user_t *sub = NULL;
 
-    if (!team) {
-        send_error(ERR_NOSUCHTEAM, fd);
+    if (!team_exist(user_connex, cmd))
         return (1);
-    }
     sub = find_sub(team->subs, NULL, user_connex->user->user_uuid);
     if (sub) {
         send_error(ERR_ALREADYSUBBED, fd);
@@ -81,6 +79,8 @@ static void subscribe(connex_t *user_connex, team_t *team)
     const char *user_p_format = "./backup/users/usr_%s/team_sub_info";
 
     add_sub(team, user_connex->user->user_name, user_connex->user->user_uuid);
+    add_team_sub(user_connex->user, team->team_name, team->team_uuid,
+        team->team_desc);
     sprintf(sub_info_path, team_p_format, team->team_uuid);
     sprintf(team_sub_info_path, user_p_format, user_connex->user->user_uuid);
     subscribe_helper(sub_info_path, team_sub_info_path, user_connex, team);

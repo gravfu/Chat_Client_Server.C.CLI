@@ -12,9 +12,9 @@
 
 static int contains_errors(int fd, connex_t *user_connex, command_t *cmd);
 
-static int check_context(int fd, command_t *cmd);
+static int check_context(int fd, connex_t *user_connex, command_t *cmd);
 
-static int check_context_helper(int fd, command_t *cmd, channel_t *channel);
+static int check_context_helper(int fd, command_t *cmd, team_t *team);
 
 void change_context(connex_t *user_connex, command_t *cmd);
 
@@ -40,41 +40,39 @@ static int contains_errors(int fd, connex_t *user_connex, command_t *cmd)
         send_error(ERR_TOOMANYPARAMS, fd);
         return (1);
     }
-    return (check_context(fd, cmd));
+    return (check_context(fd, user_connex, cmd));
 }
 
-static int check_context(int fd, command_t *cmd)
+static int check_context(int fd, connex_t *user_connex, command_t *cmd)
 {
-    channel_t *channel = NULL;
     team_t *team = NULL;
 
     if (cmd->num_args > 0) {
+        if (!team_exist(user_connex, cmd))
+            return (1);
         team = find_team(NULL, cmd->args[0]);
-        if (!team) {
-            send_error(ERR_NOSUCHTEAM, fd);
+        if (find_team_sub(user_connex->user->team_subs, team->team_name,
+            team->team_uuid) == NULL) {
+            send_error(ERR_NOTSUBBED, fd);
             return (1);
         }
     }
-    if (cmd->num_args > 1) {
-        channel = find_channel(team->channels, NULL, cmd->args[1]);
-        if (!channel) {
-            send_error(ERR_NOSUCHCHANNEL, fd);
-            return (1);
-        }
-    }
-    return (check_context_helper(fd, cmd, channel));
+    return (check_context_helper(fd, cmd, team));
 }
 
-static int check_context_helper(int fd, command_t *cmd, channel_t *channel)
+static int check_context_helper(int fd, command_t *cmd, team_t *team)
 {
+    channel_t *channel = NULL;
     thread_t *thread = NULL;
 
-    if (cmd->num_args > 2) {
-        thread = find_thread(channel->threads, NULL, cmd->args[2]);
-        if (!thread) {
-            send_error(ERR_NOSUCHTHREAD, fd);
+    if (cmd->num_args > 1) {
+        if (!channel_exist(fd, cmd, team))
             return (1);
-        }
+        channel = find_channel(team->channels, NULL, cmd->args[1]);
+    }
+    if (cmd->num_args > 2) {
+        if (!thread_exist(fd, cmd, channel))
+            return (1);
     }
     return (0);
 }

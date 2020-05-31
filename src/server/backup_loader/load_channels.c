@@ -53,7 +53,7 @@ void add_chann(team_t *p_team, const char *c_name, const char *c_uuid,
         while (list_cpy->next != NULL)
             list_cpy = list_cpy->next;
         alloc_chann(&new_channel, c_name, c_uuid, c_desc);
-        list_cpy->p_team = p_team;
+        new_channel->p_team = p_team;
         list_cpy->next = new_channel;
     }
 }

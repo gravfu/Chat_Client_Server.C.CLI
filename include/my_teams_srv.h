@@ -144,6 +144,8 @@ void create_cmd(int fd, command_t *cmd);
 void add_comment(thread_t *thread, const char *user_name,
     const char* comment);
 
+int channel_exist(int sock_fd, command_t *cmd, team_t *team);
+
 void create_comment(connex_t *user_connex, command_t *cmd);
 
 void create_comment_response(connex_t *user_connex, command_t *cmd,
@@ -183,6 +185,9 @@ chat_t *find_chat(chat_t *chat_list, const char *recipient);
 connex_t *find_connex(int fd);
 
 team_t *find_team(const char *team_name, const char *team_uuid);
+
+team_t *find_team_sub(team_t *sub_list, const char *t_name,
+    const char *t_uuid);
 
 thread_t *find_thread(thread_t *thread_list, const char *thread_title,
     const char *thread_uuid);
@@ -288,7 +293,11 @@ void subscribe_cmd(int fd, command_t *cmd);
 
 void subscribed_cmd(int fd, command_t *cmd);
 
+int team_exist(connex_t *user_connex, command_t *cmd);
+
 void team_switch(connex_t *user_connex, command_t *cmd);
+
+int thread_exist(int sock_fd, command_t *cmd, channel_t *channel);
 
 void thread_switch(connex_t *user_connex, command_t *cmd);
 
@@ -299,6 +308,8 @@ void use_cmd(int fd, command_t *cmd);
 void user_cmd(int fd, command_t *cmd);
 
 void users_cmd(int fd, command_t *cmd);
+
+int user_exist(connex_t *user_connex, command_t *cmd);
 
 static void (* const CMD_FUNCS[14])(int fd, command_t *cmd) = {
     &help_cmd,

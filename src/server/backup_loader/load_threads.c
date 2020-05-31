@@ -100,6 +100,6 @@ static void add_loaded_thread(channel_t *p_channel)
     strcpy(new_thread.thread_init, t_init);
     strcpy(new_thread.timestamp, t_timestamp);
     strcpy(new_thread.user_uuid, t_u_uuid);
-    new_thread.p_channel = NULL;
+    new_thread.p_channel = p_channel;
     add_thread(p_channel, &new_thread);
 }

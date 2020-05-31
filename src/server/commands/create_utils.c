@@ -38,7 +38,7 @@ void create_thread(connex_t *user_connex, command_t *cmd, const char *uuid_str)
     strcpy(new_thread.thread_init, cmd->args[1]);
     strcpy(new_thread.timestamp, time_str);
     strcpy(new_thread.user_uuid, user_connex->user->user_uuid);
-    new_thread.p_channel = NULL;
+    new_thread.p_channel = channel_context;
     add_thread(channel_context, &new_thread);
     create_thread_file(user_connex, &new_thread);
     server_event_thread_created(channel_context->channel_uuid, uuid_str,
