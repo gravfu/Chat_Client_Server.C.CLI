@@ -73,6 +73,8 @@ int rsp_parsing(int code, char *buffer)
         return client_team_print_channels_handle(buffer);
         case RSP_INFO_TEAM:
         return client_print_team_handle(buffer);
+        case RSP_LIST_THREAD:
+        return client_channel_print_threads_handle(buffer);
         default:
         return 1;
     }
