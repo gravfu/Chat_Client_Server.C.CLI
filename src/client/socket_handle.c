@@ -44,6 +44,8 @@ int stdin_data_detected(char *buffer, user_info *info)
         if (FD_ISSET(info->listenfd, &info->write_set))
             dprintf(info->listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
     } else if (read_var == 0) {
+        if (FD_ISSET(info->listenfd, &info->write_set))
+            dprintf(info->listenfd, "START_COMM\r\n/logout\r\nEND_COMM\n");
         return 1;
     }
     return 0;
@@ -91,7 +93,7 @@ int loop_init(int const listenfd)
         info.write_set = write_fd;
         loop_content(&info, &tmp, buffer);
     }
-    close(listenfd);
+    
     return 0;
 }
 

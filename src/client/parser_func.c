@@ -37,17 +37,17 @@ char *var_parser_body(char *buffer, char *to_searsh)
     int i;
     if (variable == NULL)
         return NULL;
-    gui1 = strstr(variable, " ");
+    gui1 = strstr(variable, "\"");
     if (gui1 == NULL)
         return NULL;
-    gui2 = strstr(gui1 + 1, "\n");
+    gui2 = strstr(gui1 + 1, "\"");
     if (gui2 == NULL || gui1 == gui2)
         return NULL;
     tmp = gui1;
     for (i = 0; tmp != gui2 - 1; i++, tmp++);
     new = malloc(sizeof(char) * (i + 5));
     memset(new, 0, i + 4);
-    strncpy(new, gui1 + 1, gui2 - gui1 - 2);
+    strncpy(new, gui1 + 1, gui2 - gui1 - 1);
     new[gui2 - gui1 - 1] = '\0';
     return new;
 }
