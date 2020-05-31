@@ -66,6 +66,7 @@ void remove_char(char *s, int c)
 time_t string_to_time_t(char *buffer)
 {
     struct tm tm;
+    memset(&tm, 0, sizeof(struct tm));
     if (!buffer) {
         return 0;
     }

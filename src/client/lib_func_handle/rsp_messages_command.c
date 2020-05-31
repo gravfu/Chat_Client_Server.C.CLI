@@ -24,7 +24,7 @@ int client_private_message_print_messages_handle(char *buffer)
         if (body != NULL) free(body);
         tmp = strstr(tmp, "\n") + 1;
         useruuid = var_parser(tmp, "useruuid:");
-        time = var_parser(tmp, "useruuid:");
+        time = var_parser(tmp, "time:");
         timea = string_to_time_t(time);
         body = var_parser_body(tmp, "body:");
     }
