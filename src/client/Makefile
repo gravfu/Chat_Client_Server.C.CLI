@@ -37,7 +37,8 @@ SRC		=	main.c \
 			lib_func_handle/rsp_list_team.c \
 			lib_func_handle/rsp_list_channel.c \
 			lib_func_handle/rsp_list_thread.c \
-			lib_func_handle/rsp_info_team.c
+			lib_func_handle/rsp_info_team.c \
+			lib_func_handle/rsp_messages_command.c
 
 OBJ     	=       $(SRC:.c=.o)
 
