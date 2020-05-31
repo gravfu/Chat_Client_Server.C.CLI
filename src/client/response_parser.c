@@ -23,66 +23,43 @@ int get_code(char *buffer)
 int err_parsing(int code, char *buffer)
 {
     switch (code) {
-        case ERR_TEAMEXISTS:
-        return client_error_already_exist_handle();
-        case ERR_THREADEXISTS:
-        return client_error_already_exist_handle();
-        case ERR_CHANNELEXISTS:
-        return client_error_already_exist_handle();
-        case ERR_NOTCONNECTED:
-        return client_error_unauthorized_handle();
-        case ERR_NOTSUBBED:
-        return client_error_unauthorized_handle();
-        case ERR_ALREADYCONNECTED:
-        return client_error_unauthorized_handle();
-        case ERR_NOSUCHUSER:
-        return client_error_unknown_user_handle(buffer);
+        case ERR_TEAMEXISTS: return client_error_already_exist_handle();
+        case ERR_THREADEXISTS: return client_error_already_exist_handle();
+        case ERR_CHANNELEXISTS: return client_error_already_exist_handle();
+        case ERR_NOTCONNECTED: return client_error_unauthorized_handle();
+        case ERR_NOTSUBBED: return client_error_unauthorized_handle();
+        case ERR_ALREADYCONNECTED: return client_error_unauthorized_handle();
+        case ERR_NOSUCHUSER: return client_error_unknown_user_handle(buffer);
         case ERR_NOSUCHCHANNEL:
         return client_error_unknown_channel_handle(buffer);
-        case ERR_NOSUCHTEAM:
-        return client_error_unknown_team_handle(buffer);
+        case ERR_NOSUCHTEAM: return client_error_unknown_team_handle(buffer);
         case ERR_NOSUCHTHREAD:
         return client_error_unknown_thread_handle(buffer);
-        default:
-        return 1;
+        default: return 1;
     }
 }
 
-int rsp_parsing(int code, char *buffer)
+int rsp_parsing(int code, char *buf)
 {
     switch (code) {
-        case RSP_USER:
-        return client_print_user_handle(buffer);
-        case RSP_SUBSCRIBE:
-        return client_print_subscribed_handle(buffer);
-        case RSP_UNSUBSCRIBE:
-        return client_print_unsubscribed_handle(buffer);
-        case RSP_CREATE_COMMENT:
-        return client_print_reply_created_handle(buffer);
-        case RSP_CREATE_THREAD:
-        return client_print_thread_created_handle(buffer);
+        case RSP_USER: return client_print_user_handle(buf);
+        case RSP_SUBSCRIBE: return client_print_subscribed_handle(buf);
+        case RSP_UNSUBSCRIBE: return client_print_unsubscribed_handle(buf);
+        case RSP_CREATE_COMMENT: return client_print_reply_created_handle(buf);
+        case RSP_CREATE_THREAD: return client_print_thread_created_handle(buf);
         case RSP_CREATE_CHANNNEL:
-        return client_print_channel_created_handle(buffer);
-        case RSP_CREATE_TEAM:
-        return client_print_team_created_handle(buffer);
-        case RSP_USERS:
-        return client_print_users_handle(buffer);
-        case RSP_INFO_USER:
-        return client_print_users_handle(buffer);
-        case RSP_LIST_TEAM:
-        return client_print_teams_handle(buffer);
-        case RSP_LIST_CHANNEL:
-        return client_team_print_channels_handle(buffer);
-        case RSP_INFO_TEAM:
-        return client_print_team_handle(buffer);
-        case RSP_LIST_THREAD:
-        return client_channel_print_threads_handle(buffer);
-        case RSP_LIST_COMMENT:
-        return client_thread_print_replies_handle(buffer);
+        return client_print_channel_created_handle(buf);
+        case RSP_CREATE_TEAM: return client_print_team_created_handle(buf);
+        case RSP_USERS: return client_print_users_handle(buf);
+        case RSP_INFO_USER: return client_print_users_handle(buf);
+        case RSP_LIST_TEAM: return client_print_teams_handle(buf);
+        case RSP_LIST_CHANNEL: return client_team_print_channels_handle(buf);
+        case RSP_INFO_TEAM: return client_print_team_handle(buf);
+        case RSP_LIST_THREAD: return client_channel_print_threads_handle(buf);
+        case RSP_LIST_COMMENT: return client_thread_print_replies_handle(buf);
         case RSP_MESSAGES:
-        return client_private_message_print_messages_handle(buffer);
-        default:
-        return 1;
+        return client_private_message_print_messages_handle(buf);
+        default: return 1;
     }
 }
 
