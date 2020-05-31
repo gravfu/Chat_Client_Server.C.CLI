@@ -14,7 +14,7 @@ int client_print_team_handle(char *buffer)
     char *teamdesc = var_parser(buffer, "teamdesc:");
 
     if (client_print_team(teamuuid, teamname, teamdesc) == -1) {
-        printf("Error in client_event_team_created\n");
+        printf("Error in client_print_team\n");
     }
     if (teamuuid)
         free(teamuuid);
