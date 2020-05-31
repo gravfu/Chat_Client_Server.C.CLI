@@ -90,6 +90,7 @@ int loop_init(int const listenfd)
         info.write_set = write_fd;
         loop_content(&info, &tmp, buffer);
     }
+    close(listenfd);
     return 0;
 }
 

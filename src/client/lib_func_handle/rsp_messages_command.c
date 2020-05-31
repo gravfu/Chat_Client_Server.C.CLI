@@ -9,7 +9,7 @@
 
 int client_private_message_print_messages_handle(char *buffer)
 {
-    char *tmp = strstr(strstr(buffer, "\n") + 1, "\n") + 1;
+    char *tmp = strstr(buffer, "\n") + 1;
     char *useruuid = var_parser(tmp, "useruuid:");
     char *time = var_parser(tmp, "time:");
     time_t timea = string_to_time_t(time);

@@ -37,7 +37,7 @@ char *var_parser_body(char *buffer, char *to_searsh)
     gui1 = strstr(variable, " ");
     if (gui1 == NULL)
         return NULL;
-    gui2 = strstr(gui1 + 1, "\nEND_RSP");
+    gui2 = strstr(gui1 + 1, "\n");
     if (gui2 == NULL || gui1 == gui2)
         return NULL;
     tmp = gui1;
