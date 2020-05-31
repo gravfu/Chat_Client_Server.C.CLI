@@ -15,7 +15,7 @@ int client_print_teams_handle(char *buffer)
     char *desc = var_parser(tmp, "teamdesc:");
 
     tmp = strstr(tmp, "\n") + 1;
-    while(name != NULL) {
+    while (name != NULL) {
         if (client_print_teams(uuid, name, desc) == -1)
             printf("Error in client_print_teams\n");
         if (name != NULL) free(name);

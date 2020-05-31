@@ -16,18 +16,13 @@ int client_print_thread_created_handle(char *buffer)
     char *title = var_parser(buffer, "title:");
     char *body = var_parser_body(buffer, "body:");
 
-    if (client_print_thread_created(threaduuid, useruuid, timea, title, body) == -1) {
+    if (client_print_thread_created(threaduuid, useruuid,
+        timea, title, body) == -1)
         printf("Error in client_event_team_created\n");
-    }
-    if (threaduuid)
-        free(threaduuid);
-    if (useruuid)
-        free(useruuid);
-    if (time)
-        free(time);
-    if (title)
-        free(title);
-    if (body)
-        free(body);
+    if (threaduuid) free(threaduuid);
+    if (useruuid) free(useruuid);
+    if (time) free(time);
+    if (title) free(title);
+    if (body) free(body);
     return 0;
 }

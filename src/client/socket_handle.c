@@ -51,7 +51,8 @@ int stdin_data_detected(char *buffer, user_info *info)
 
 void loop_content(user_info *info, int *tmp, char *buffer)
 {
-    int reader_sel = select(info->listenfd + 1, &info->rfds_set, &info->write_set, NULL, NULL);
+    int reader_sel = select(info->listenfd + 1, &info->rfds_set,
+        &info->write_set, NULL, NULL);
 
     if (reader_sel < 0)
         printf("select failed\n ");

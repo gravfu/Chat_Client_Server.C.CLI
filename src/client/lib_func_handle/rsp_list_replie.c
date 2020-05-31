@@ -16,7 +16,7 @@ int client_thread_print_replies_handle(char *buffer)
     time_t time = string_to_time_t(var_parser(tmp, "time:"));
 
     tmp = strstr(tmp, "\n") + 1;
-    while(t_uuid != NULL) {
+    while (t_uuid != NULL) {
         if (client_thread_print_replies(t_uuid, u_uuid, time, body) == -1)
             printf("Error in client_thread_print_replies\n");
         if (t_uuid != NULL) free(t_uuid);

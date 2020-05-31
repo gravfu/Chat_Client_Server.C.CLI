@@ -15,7 +15,7 @@ int client_team_print_channels_handle(char *buffer)
     char *desc = var_parser(tmp, "channeldesc:");
 
     tmp = strstr(tmp, "\n") + 1;
-    while(name != NULL) {
+    while (name != NULL) {
         if (client_team_print_channels(uuid, name, desc) == -1)
             printf("Error in client_team_print_channels\n");
         if (name != NULL) free(name);

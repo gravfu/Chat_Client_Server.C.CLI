@@ -7,6 +7,15 @@
 
 #include "socket_handle.h"
 
+void client_channel_print_threads_handle_free(char *t_uuid,
+                        char *u_uuid, char *title, char *body)
+{
+    if (t_uuid != NULL) free(t_uuid);
+    if (u_uuid != NULL) free(u_uuid);
+    if (title != NULL) free(title);
+    if (body != NULL) free(body);
+}
+
 int client_channel_print_threads_handle(char *buffer)
 {
     char *tmp = strstr(buffer, "\n") + 1;
@@ -15,15 +24,11 @@ int client_channel_print_threads_handle(char *buffer)
     char *title = var_parser(tmp, "threadtitle:");
     char *body = var_parser_body(tmp, "body:");
     time_t time = string_to_time_t(var_parser(tmp, "time:"));
-
     tmp = strstr(tmp, "\n") + 1;
-    while(t_uuid != NULL) {
-        if (client_channel_print_threads(t_uuid, u_uuid, time, title, body) == -1)
-            printf("Error in client_channel_print_threads\n");
-        if (t_uuid != NULL) free(t_uuid);
-        if (u_uuid != NULL) free(u_uuid);
-        if (title != NULL) free(title);
-        if (body != NULL) free(body);
+    while (t_uuid != NULL) {
+        if (client_channel_print_threads(t_uuid, u_uuid, time, title,
+            body) == -1) printf("Error in client_channel_print_threads\n");
+        client_channel_print_threads_handle_free(t_uuid, u_uuid, title, body);
         tmp = strstr(tmp, "\n") + 1;
         t_uuid = var_parser(tmp, "threaduuid:");
         u_uuid = var_parser(tmp, "useruuid:");
