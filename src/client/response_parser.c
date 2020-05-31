@@ -65,6 +65,8 @@ int rsp_parsing(int code, char *buffer)
         return client_print_channel_created_handle(buffer);
         case RSP_CREATE_TEAM:
         return client_print_team_created_handle(buffer);
+        case RSP_USERS:
+        return client_print_users_handle(buffer);
         default:
         return 1;
     }

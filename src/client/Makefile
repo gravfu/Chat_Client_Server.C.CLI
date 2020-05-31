@@ -32,7 +32,8 @@ SRC		=	main.c \
 			lib_func_handle/err_unknown_user.c \
 			lib_func_handle/err_unknown_channel.c \
 			lib_func_handle/err_unknown_team.c \
-			lib_func_handle/err_unknown_thread.c
+			lib_func_handle/err_unknown_thread.c \
+			lib_func_handle/rsp_users.c
 
 OBJ     	=       $(SRC:.c=.o)
 
