@@ -52,20 +52,17 @@ void create_thread_file(connex_t *user_connex, thread_t *new_thread)
 {
     channel_t *channel = (channel_t *)user_connex->context;
     char t_file_path[4096] = {0};
-    char time_str[TIME_LEN] = {0};
     const char *format = "./backup/teams/team_%s/channels/chan_%s/threads/"
         "thread_%s";
     FILE *thread = NULL;
-    time_t now = time(NULL);
 
     create_thread_info(channel, new_thread);
     sprintf(t_file_path, format, channel->p_team->team_uuid,
         channel->channel_uuid, new_thread->thread_uuid);
     make_path(t_file_path, 0777);
     thread = fopen(t_file_path, "a+");
-    strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
     fprintf(thread, "%s: %s: %s\r\n\n", user_connex->user->user_uuid,
-        new_thread->thread_init, time_str);
+        new_thread->thread_init, new_thread->timestamp);
     fclose(thread);
 }
 
@@ -87,7 +84,7 @@ void create_thread_info(channel_t *channel, thread_t *new_thread)
     strftime(time_str, 20, "%Y-%m-%d %H:%M:%S", localtime(&now));
     fprintf(thread_info, thread_format, new_thread->user_uuid,
         new_thread->thread_title, new_thread->thread_uuid,
-        new_thread->thread_init, new_thread->thread_init);
+        new_thread->thread_init, new_thread->timestamp);
     fclose(thread_info);
 }
 
