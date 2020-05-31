@@ -54,7 +54,7 @@ static void drop_sub_helper(FILE *sub_info, FILE *sub_info_tmp,
 int drop_team_sub(user_t *user, const char *t_name, const char *t_uuid)
 {
     const char *info_format = "./backup/users/usr_%s/team_sub_info";
-    const char *tmp_format = "./backup/teams/team_%s/team_sub_info_tmp";
+    const char *tmp_format = "./backup/users/usr_%s/team_sub_info_tmp";
     char sub_info_path[4096] = {0};
     char sub_info_tmp_path[4096] = {0};
     FILE *sub_info = NULL;
