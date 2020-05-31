@@ -18,7 +18,7 @@ void create_comment_response(connex_t *user_connex, command_t *cmd,
     thread_t *thread = (thread_t *)user_connex->context;
 
     sprintf(rsp, "START_RSP\r\n%d\r\nthreaduuid: \"%s\" useruuid: \"%s\" "
-        "time: \"%s\" \"%s\"\r\nEND_RSP\r\n", RSP_CREATE_COMMENT,
+        "time: \"%s\" body: \"%s\"\r\nEND_RSP\r\n", RSP_CREATE_COMMENT,
         thread->thread_uuid, user_connex->user->user_uuid, timestamp,
         cmd->args[0]);
     sprintf(notif, "START_RSP\r\n%d\r\nthreaduuid: \"%s\" useruuid: \"%s\" "
@@ -37,7 +37,7 @@ void create_thread_response(const char *uuid_str, connex_t *user_connex)
     thread_t *thread = find_thread(channel->threads, NULL, uuid_str);
 
     sprintf(rsp, "START_RSP\r\n%d\r\nthreaduuid: \"%s\" useruuid: \"%s\" "
-        "time: \"%s\" title: \"%s\" \"%s\"\r\nEND_RSP\r\n",
+        "time: \"%s\" title: \"%s\" body: \"%s\"\r\nEND_RSP\r\n",
         RSP_CREATE_THREAD, uuid_str, user_connex->user->user_uuid,
         thread->timestamp, thread->thread_title, thread->thread_init);
     sprintf(notif, "START_RSP\r\n%d\r\nthreaduuid: \"%s\" useruuid: \"%s\" "

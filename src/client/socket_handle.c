@@ -27,24 +27,24 @@ int read_output(int listenfd, user_info *info)
     return 0;
 }
 
-int stdin_data_detected(char *buffer, user_info *info)
+int stdin_data_detected(char *buf, user_info *info)
 {
     int read_var;
     int tmp = 0;
-    memset(buffer, 0, 4096);
-    read_var = read(0, buffer, 4096);
-    if (read_var > 1) {
+    memset(buf, 0, 4096);
+    read_var = read(0, buf, 4096);
+    if (read_var > 1 && strcmp(buf, "/logout\n") != 0) {
         for (int i = 0; i < read_var; i++) {
-            if (buffer[i] == '"')
-                tmp++;
-            if (buffer[i] == ' ' && tmp % 2 == 0)
-                buffer[i] = '\n';
+            if (buf[i] == '"') tmp++;
+            if (buf[i] == ' ' && tmp % 2 == 0)
+                buf[i] = '\n';
         }
-        remove_char(buffer, '"');
+        remove_char(buf, '"');
         if (FD_ISSET(info->listenfd, &info->write_set))
-            dprintf(info->listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buffer);
-    } else if (read_var == 0) {
-        if (FD_ISSET(info->listenfd, &info->write_set))
+            dprintf(info->listenfd, "START_COMM\r\n%s\r\nEND_COMM\n", buf);
+    } else if (read_var == 0 ||
+        (read_var > 1 && strcmp(buf, "/logout\n") == 0)) {
+        if (FD_ISSET(info->listenfd, &info->write_set) && info->is_set == 1)
             dprintf(info->listenfd, "START_COMM\r\n/logout\r\nEND_COMM\n");
         return 1;
     }
@@ -63,11 +63,10 @@ void loop_content(user_info *info, int *tmp, char *buffer)
             read_output(info->listenfd, info);
         if (FD_ISSET(0, &info->rfds_set) && *tmp == 0)
             *tmp = stdin_data_detected(buffer, info);
-        if (*tmp == 2)
-            *tmp = 4;
         if (*tmp == 1) {
-            sleep(0.01);
-            *tmp = 2;
+            if (info->is_set == 1)
+                read_output(info->listenfd, info);
+            *tmp = 4;
         }
     }
 }
@@ -93,7 +92,6 @@ int loop_init(int const listenfd)
         info.write_set = write_fd;
         loop_content(&info, &tmp, buffer);
     }
-    
     return 0;
 }
 
