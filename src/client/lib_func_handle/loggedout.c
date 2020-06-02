@@ -11,7 +11,7 @@ int client_event_loggedout_handle(char *buffer, user_info *info)
 {
     char *user = var_parser(buffer, "username:");
     char *uuid = var_parser(buffer, "useruuid:");
-    if (client_event_loggedout(user, uuid) == -1) {
+    if (client_event_loggedout(uuid, user) == -1) {
         printf("Error in client_event_loggedin\n");
     }
     if (user)
